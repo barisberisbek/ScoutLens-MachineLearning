@@ -211,3 +211,68 @@ FBREF_COLUMN_RENAME: dict[str, str] = {
 STATS_PRESERVE_SUFFIXED: dict[str, str] = {
     "Lost_stats_misc": "aerials_lost",
 }
+
+
+# ── FBref (soccerdata) scrape configuration ─────────────────────────────────
+# Maps our canonical league name → the soccerdata league key passed to
+# sd.FBref(leagues=[...]). The Big-5 keys are soccerdata built-ins; the lower-4
+# keys are defined in a custom league_dict.json (see data/external/) because
+# soccerdata 1.9.0 does not ship them.
+FBREF_LEAGUE_IDS: dict[str, str] = {
+    "Premier League": "ENG-Premier League",
+    "La Liga": "ESP-La Liga",
+    "Bundesliga": "GER-Bundesliga",
+    "Serie A": "ITA-Serie A",
+    "Ligue 1": "FRA-Ligue 1",
+    "Eredivisie": "NED-Eredivisie",
+    "Liga Portugal": "POR-Primeira Liga",
+    "Belgian Pro League": "BEL-Pro League",
+    "Süper Lig": "TUR-Süper Lig",
+}
+
+# soccerdata 4-digit season codes (e.g. '2324' == 2023-2024).
+FBREF_SEASONS: list[str] = ["2122", "2223", "2324", "2425"]
+
+# Player-season stat tables. soccerdata 1.9.0 natively allows only the NATIVE set
+# (fbref.py:546); the EXTENDED set is fetched via the monkeypatched method (same engine,
+# wider whitelist). All 11 FBref player-season tables are scraped. NOTE: none of these
+# carry xG/npxG/xAG/progression-counts (a soccerdata limitation) — xG comes from Kaggle
+# (2024-25 top-5) and Understat (top-5, all seasons); lower-league xG stays unavailable.
+FBREF_STAT_TYPES_NATIVE: list[str] = ["standard", "shooting", "playing_time", "keeper", "misc"]
+FBREF_STAT_TYPES_EXTENDED: list[str] = [
+    "passing", "passing_types", "gca", "defense", "possession", "keeper_adv",
+]
+FBREF_STAT_TYPES: list[str] = FBREF_STAT_TYPES_NATIVE + FBREF_STAT_TYPES_EXTENDED
+
+
+# ── Transfermarkt (davidcariboo player-scores) configuration ────────────────
+# Transfermarkt competition_id per canonical league (verified against competitions.csv).
+TM_LEAGUE_COMPETITION_IDS: dict[str, str] = {
+    "Premier League": "GB1",
+    "La Liga": "ES1",
+    "Bundesliga": "L1",
+    "Serie A": "IT1",
+    "Ligue 1": "FR1",
+    "Eredivisie": "NL1",
+    "Liga Portugal": "PO1",
+    "Belgian Pro League": "BE1",
+    "Süper Lig": "TR1",
+}
+
+# Season-end reference dates for MV snapshot alignment (D-16).
+SEASON_END_DATES: dict[str, str] = {
+    "2021-22": "2022-06-30",
+    "2022-23": "2023-06-30",
+    "2023-24": "2024-06-30",
+    "2024-25": "2025-06-30",
+}
+MV_SNAPSHOT_WINDOW_DAYS: int = 45
+
+# Transfermarkt position taxonomy → our primary positions. TM uses full words
+# (NOT FBref's GK/DF/MF/FW), so normalize_position() does NOT apply here.
+TM_POSITION_MAP: dict[str, str] = {
+    "Goalkeeper": "GK",
+    "Defender": "DEF",
+    "Midfield": "MID",
+    "Attack": "FWD",
+}

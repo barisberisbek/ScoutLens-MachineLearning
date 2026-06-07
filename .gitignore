@@ -21,6 +21,9 @@ venv/
 .DS_Store
 Thumbs.db
 
+# ── Scraper / driver artifacts (seleniumbase, soccerdata browser) ──
+downloaded_files/
+
 # ── Data & artifacts: ignore contents, KEEP folder skeleton (.gitkeep) ──
 # Raw & interim are gitignored; data/external/ and data/manual/ ARE committed.
 data/raw/**

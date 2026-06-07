@@ -1,0 +1,6 @@
+{
+  "NED-Eredivisie": {"FBref": "Eredivisie", "season_start": "Aug", "season_end": "May"},
+  "POR-Primeira Liga": {"FBref": "Primeira Liga", "season_start": "Aug", "season_end": "May"},
+  "BEL-Pro League": {"FBref": "Belgian Pro League", "season_start": "Aug", "season_end": "May"},
+  "TUR-Süper Lig": {"FBref": "Süper Lig", "season_start": "Aug", "season_end": "May"}
+}
