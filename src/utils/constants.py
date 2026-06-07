@@ -81,3 +81,133 @@ ALL_SEASONS: list[str] = TRAIN_SEASONS + [TEST_SEASON]
 TOP5_LEAGUES: list[str] = ["Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1"]
 LOWER4_LEAGUES: list[str] = ["Eredivisie", "Liga Portugal", "Belgian Pro League", "Süper Lig"]
 ALL_LEAGUES: list[str] = TOP5_LEAGUES + LOWER4_LEAGUES
+
+
+# ── Kaggle (Hubert) FBref column rename map ─────────────────────────────────
+# The Kaggle dataset merges FBref's 10 stat tables; bare column names are the
+# canonical ones kept after de-duplication. This maps raw FBref short names to
+# readable snake_case. Columns absent here fall back to _auto_normalize().
+# NOTE: bare 'Lost' is the defense table's "challenges lost" → tackles_lost.
+# The misc table's aerials-lost arrives suffixed and is preserved separately via
+# STATS_PRESERVE_SUFFIXED below.
+FBREF_COLUMN_RENAME: dict[str, str] = {
+    # Identity
+    "Player": "player_name",
+    "Nation": "nationality_raw",
+    "Pos": "position_raw",
+    "Squad": "club",
+    "Comp": "league_raw",
+    "Age": "age",
+    "Born": "birth_year",
+    # Playing time
+    "MP": "matches_played",
+    "Starts": "matches_started",
+    "Min": "minutes_played",
+    "90s": "matches_90s",
+    # Scoring
+    "Gls": "goals",
+    "Ast": "assists",
+    "G+A": "goals_plus_assists",
+    "G-PK": "non_penalty_goals",
+    "PK": "penalty_goals",
+    "PKatt": "penalty_attempts",
+    "CrdY": "yellow_cards",
+    "CrdR": "red_cards",
+    # Advanced
+    "xG": "xg",
+    "npxG": "npxg",
+    "xAG": "xag",
+    "npxG+xAG": "npxg_plus_xag",
+    "PrgC": "progressive_carries",
+    "PrgP": "progressive_passes",
+    "PrgR": "progressive_passes_received",
+    "G+A-PK": "goals_assists_minus_penalty",
+    "xG+xAG": "xg_plus_xag",
+    # Shooting
+    "Sh": "shots",
+    "SoT": "shots_on_target",
+    "SoT%": "shots_on_target_pct",
+    "Sh/90": "shots_per_90",
+    "SoT/90": "shots_on_target_per_90",
+    "G/Sh": "goals_per_shot",
+    "G/SoT": "goals_per_shot_on_target",
+    "Dist": "avg_shot_distance",
+    "FK": "free_kicks",
+    "npxG/Sh": "npxg_per_shot",
+    "G-xG": "goals_minus_xg",
+    "np:G-xG": "npg_minus_npxg",
+    # Passing
+    "Cmp": "passes_completed",
+    "Att": "passes_attempted",
+    "Cmp%": "pass_completion_pct",
+    "TotDist": "pass_total_distance",
+    "PrgDist": "pass_progressive_distance",
+    "KP": "key_passes",
+    "1/3": "passes_into_final_third",
+    "PPA": "passes_into_penalty_area",
+    "CrsPA": "crosses_into_penalty_area",
+    "xA": "xa",
+    "A-xAG": "assists_minus_xag",
+    # SCA/GCA
+    "SCA": "shot_creating_actions",
+    "SCA90": "sca_per_90",
+    "GCA": "goal_creating_actions",
+    "GCA90": "gca_per_90",
+    "PassLive": "passes_live",
+    "PassDead": "passes_dead",
+    "TO": "take_ons_leading_to_shot",
+    "Fld": "fouls_drawn",
+    # Defense
+    "Tkl": "tackles",
+    "TklW": "tackles_won",
+    "Def 3rd": "tackles_def_third",
+    "Mid 3rd": "tackles_mid_third",
+    "Att 3rd": "tackles_att_third",
+    "Tkl%": "tackle_success_pct",
+    "Lost": "tackles_lost",  # defense "challenges lost"; aerials-lost preserved separately
+    "Blocks": "blocks",
+    "Pass": "passes_blocked",
+    "Int": "interceptions",
+    "Tkl+Int": "tackles_plus_interceptions",
+    "Clr": "clearances",
+    "Err": "errors_leading_to_shot",
+    # Possession
+    "Touches": "touches",
+    "Def Pen": "touches_def_pen",
+    "Att Pen": "touches_att_pen",
+    "Live": "touches_live",
+    "Carries": "carries",
+    "CPA": "carries_into_penalty_area",
+    "Mis": "miscontrols",
+    "Dis": "dispossessed",
+    "Rec": "passes_received",
+    # Misc
+    "Fls": "fouls_committed",
+    "Recov": "ball_recoveries",
+    "Won": "aerials_won",
+    "Won%": "aerials_won_pct",
+    "PKwon": "penalty_kicks_won",
+    "PKcon": "penalty_kicks_conceded",
+    "OG": "own_goals",
+    # Keeper
+    "GA": "goals_against",
+    "GA90": "goals_against_per_90",
+    "SoTA": "shots_on_target_against",
+    "Saves": "saves",
+    "Save%": "save_pct",
+    "CS": "clean_sheets",
+    "CS%": "clean_sheet_pct",
+    "PKA": "penalty_kicks_allowed",
+    "PKsv": "penalty_kicks_saved",
+    "PSxG": "psxg",
+    "PSxG/SoT": "psxg_per_sot",
+    "PSxG+/-": "psxg_plus_minus",
+}
+
+# Suffixed columns that are semantically distinct and must be PRESERVED (renamed
+# instead of dropped) during de-duplication, because their bare base name belongs
+# to a different stat. Without this, aerials-lost would be discarded in favor of
+# the defense "challenges lost" (bare `Lost`).
+STATS_PRESERVE_SUFFIXED: dict[str, str] = {
+    "Lost_stats_misc": "aerials_lost",
+}
