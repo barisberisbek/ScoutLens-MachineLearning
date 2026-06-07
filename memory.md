@@ -1,16 +1,16 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** Phase 1C complete; **Phase 1B FBref scrape still RUNNING in background** (`boo3tlz7e`, ~3-5h) — its coverage/cross-val/commit are pending its completion.
+- **Current phase:** Phase 1D complete. **Phase 1B FBref scrape RUNNING in background** (resumed post-restart as `b0w7cqcmc`; was at 94/396, ~302 combos left) — its coverage/cross-val/[x]/commit pending completion.
 - **Last updated:** 2026-06-07
-- **Last session summary:** Phase 1C done — `src/data/transfermarkt_loader.py` ingests davidcariboo CSVs → 5 `data/interim/tm_*.parquet`. Understat (Phase 1B xG source) scraped 20/20. Env note: `.venv` Python 3.13.1, pandas 3.0.3, pyarrow 24; run scripts via `.venv\Scripts\python.exe` with `PYTHONPATH=<root>`.
+- **Last session summary:** Phase 1D done — `src/data/transfer_fee_scraper.py` scrapes TM 2024-25 top-5 inbound fees: **548 fee>0** (vs davidcariboo's 121), max €80M, 9 ≥€60M (Kvaratskhelia, Álvarez, …). Env: `.venv` Python 3.13.1, pandas 3.0.3; run via `.venv\Scripts\python.exe` + `PYTHONPATH=<root>`.
 
 ## Phase Completion Log
 - [x] Phase 0 — Foundation (repo scaffolding)
 - [x] Phase 1A — Kaggle loader
 - [ ] Phase 1B — FBref scraper
 - [x] Phase 1C — Transfermarkt-datasets ingest
-- [ ] Phase 1D — 2025 transfer fees scraper
+- [x] Phase 1D — 2025 transfer fees scraper
 - [ ] Phase 1E — FIFA ratings loader
 - [x] Phase 1F — External lookup CSVs (UEFA, continent, etc.)  ← done early in Phase 0
 - [ ] Phase 2 — Data Integration
@@ -59,8 +59,10 @@ Phase 2 `name_resolver`.
 - **Transfer fees sparse** (D-09/§11.4 "absolute truth" will be SMALL): of 481 inbound
   top-5 transfers in Jun2024–Sep2025, only **121** have fee>0 (340 fee=0, 75 null), and
   the max recorded fee is only €23.7M — the marquee €60M+ moves have no recorded fee in
-  this dataset. The transfer-fee validation will be limited to these mostly mid-size deals;
-  Phase 1D's dedicated 2025-fee scraper is the intended remedy.
+  this dataset. **RESOLVED by Phase 1D**: the custom TM scraper recovered 548 fee>0 inbound
+  top-5 transfers (max €80M, 9 ≥€60M). Use Phase 1D's
+  `transfer_fees_2024_25.csv` as the primary §11.4 reference; davidcariboo's `tm_transfers`
+  is a secondary cross-check.
 
 ## Performance / Results Log
 Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
@@ -78,3 +80,6 @@ Scaffolded the full repository per PROJECT_ROADMAP.md §15: 42 directories, 52 f
 
 ### Phase 1C — Transfermarkt (davidcariboo) ingest (2026-06-07)
 `src/data/transfermarkt_loader.py` + `scripts/load_transfermarkt.py` ingest the 12 davidcariboo CSVs → 5 interim parquets: `tm_competitions` (9 leagues, all present incl. TR1 Süper Lig), `tm_players` (**21,454** in our 9 leagues, position mapped via new `TM_POSITION_MAP`, WC proxy = `has_international_caps` from players.csv), `tm_player_seasons` (**28,587** season-end-aligned MV snapshots via `merge_asof` ±45d), `tm_transfers` (**121** fee>0 inbound top-5), `tm_national_teams` (team-level, fifa_ranking). MV-snapshot orphans (no current metadata) = 1.3%. Top-5 MV coverage per season: 21-22=5852, 22-23=6273, 23-24=2800, 24-25=1880.
+
+### Phase 1D — Custom 2024-25 transfer-fee scraper (2026-06-07)
+`src/data/transfer_fee_scraper.py` + `scripts/scrape_transfer_fees.py` scrape Transfermarkt's public per-league transfer pages (requests+BS4, browser UA, **no Cloudflare**, HTML cache, retry/backoff). 2024-25 top-5 inbound: **1757 arrivals, 548 fee>0** (vs davidcariboo's 121), median €6.75M, max **€80M**, **9 deals ≥€60M** (Kvaratskhelia→PSG €80M, J.Álvarez→Atléti €75M, Marmoush→City €75M, …). Name-overlap with davidcariboo = 63 → ~485 fee>0 transfers (incl. all marquee deals) are NEW. Output `data/raw/transfer_fees_2025/transfer_fees_2024_25.csv` (gitignored) + `reports/transfer_fees_cross_validation.md` (committed). Pre-research note: TM transfer page lacks per-transfer dates → `transfer_date`/`transfer_window`/`from_league` = None (Phase 2 resolves). This is the primary §11.4 "absolute-truth" reference (D-09).
