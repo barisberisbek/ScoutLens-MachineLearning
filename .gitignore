@@ -1,0 +1,44 @@
+# ── Python ─────────────────────────────────────────────
+*.pyc
+*.py[cod]
+__pycache__/
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Environments ───────────────────────────────────────
+.env
+.venv/
+venv/
+
+# ── Model artifacts (regenerable) ──────────────────────
+*.pkl
+*.joblib
+
+# ── OS ─────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Data & artifacts: ignore contents, KEEP folder skeleton (.gitkeep) ──
+# Raw & interim are gitignored; data/external/ and data/manual/ ARE committed.
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
+
+data/interim/*
+!data/interim/.gitkeep
+
+data/processed/*.parquet
+
+models/stage1/*
+!models/stage1/.gitkeep
+models/stage2/*
+!models/stage2/.gitkeep
+
+app/cached_data/*
+!app/cached_data/.gitkeep
+
+logs/*
+!logs/.gitkeep
