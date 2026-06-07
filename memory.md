@@ -1,9 +1,9 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** Phase 1D complete. **Phase 1B FBref scrape RUNNING in background** (resumed post-restart as `b0w7cqcmc`; was at 94/396, ~302 combos left) — its coverage/cross-val/[x]/commit pending completion.
-- **Last updated:** 2026-06-07
-- **Last session summary:** Phase 1D done — `src/data/transfer_fee_scraper.py` scrapes TM 2024-25 top-5 inbound fees: **548 fee>0** (vs davidcariboo's 121), max €80M, 9 ≥€60M (Kvaratskhelia, Álvarez, …). Env: `.venv` Python 3.13.1, pandas 3.0.3; run via `.venv\Scripts\python.exe` + `PYTHONPATH=<root>`.
+- **Current phase:** Phase 1E complete → **all Phase-1 sub-phases done EXCEPT 1B finalization.** **Phase 1B FBref scrape RUNNING in background** (`b0w7cqcmc`; was 128/396 last checked) — coverage/cross-val/[x]/commit pending its completion. After 1B → Phase 2 (Integration).
+- **Last updated:** 2026-06-08
+- **Last session summary:** Phase 1E done — `src/data/fifa_loader.py` → `data/interim/fifa_ratings.parquet` (72,283 rows, 4 seasons). Env: `.venv` Python 3.13.1, pandas 3.0.3; run via `.venv\Scripts\python.exe` + `PYTHONPATH=<root>`.
 
 ## Phase Completion Log
 - [x] Phase 0 — Foundation (repo scaffolding)
@@ -11,7 +11,7 @@
 - [ ] Phase 1B — FBref scraper
 - [x] Phase 1C — Transfermarkt-datasets ingest
 - [x] Phase 1D — 2025 transfer fees scraper
-- [ ] Phase 1E — FIFA ratings loader
+- [x] Phase 1E — FIFA ratings loader
 - [x] Phase 1F — External lookup CSVs (UEFA, continent, etc.)  ← done early in Phase 0
 - [ ] Phase 2 — Data Integration
 - [ ] Phase 3 — EDA
@@ -83,3 +83,6 @@ Scaffolded the full repository per PROJECT_ROADMAP.md §15: 42 directories, 52 f
 
 ### Phase 1D — Custom 2024-25 transfer-fee scraper (2026-06-07)
 `src/data/transfer_fee_scraper.py` + `scripts/scrape_transfer_fees.py` scrape Transfermarkt's public per-league transfer pages (requests+BS4, browser UA, **no Cloudflare**, HTML cache, retry/backoff). 2024-25 top-5 inbound: **1757 arrivals, 548 fee>0** (vs davidcariboo's 121), median €6.75M, max **€80M**, **9 deals ≥€60M** (Kvaratskhelia→PSG €80M, J.Álvarez→Atléti €75M, Marmoush→City €75M, …). Name-overlap with davidcariboo = 63 → ~485 fee>0 transfers (incl. all marquee deals) are NEW. Output `data/raw/transfer_fees_2025/transfer_fees_2024_25.csv` (gitignored) + `reports/transfer_fees_cross_validation.md` (committed). Pre-research note: TM transfer page lacks per-transfer dates → `transfer_date`/`transfer_window`/`from_league` = None (Phase 2 resolves). This is the primary §11.4 "absolute-truth" reference (D-09).
+
+### Phase 1E — FIFA / EA FC ratings loader (2026-06-08)
+`src/data/fifa_loader.py` + `scripts/load_fifa.py` → `data/interim/fifa_ratings.parquet` (**72,283 rows**, unified 14-col schema). **Source consolidation (key finding):** `EA FC 24/male_players.csv` holds one clean snapshot per fifa_version 15-24, so FIFA **22 (19,239) / 23 (18,533) / 24 (18,350)** all come from that one file — the 5.3 GB weekly-update `male_players.csv` and the legacy file are redundant and SKIPPED (IO-light). FC **25 (16,161)** from nyagami `EA FC 25/male_players.csv`. Added `FIFA_STEFANO_COLUMN_RENAME`, `FIFA_NYAGAMI_COLUMN_RENAME`, `FIFA_POSITION_MAP` (FIFA codes ST/CB/CM/GK… → primary; `normalize_position` does NOT apply), `FIFA_YEAR_TO_SEASON` to constants. **nyagami FC25 has NO `potential`/`dob`/sofifa_id** → null for 2024-25 (note for Phase 4: young-player potential feature missing for 24-25). stefano `player_id`=sofifa_id. 0 'Other' positions; Mbappé spot-check OVR 91, POT 95→94 (22-24), null (25). Phase-2 joins by name+age+nationality.

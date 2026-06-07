@@ -276,3 +276,48 @@ TM_POSITION_MAP: dict[str, str] = {
     "Midfield": "MID",
     "Attack": "FWD",
 }
+
+
+# ── FIFA / EA FC ratings configuration ──────────────────────────────────────
+# stefanoleone992 schema (FIFA 22/23/24 all live in the EA FC 24 male_players.csv,
+# one snapshot per fifa_version). player_id IS the sofifa id. age/overall/potential
+# already have the target names.
+FIFA_STEFANO_COLUMN_RENAME: dict[str, str] = {
+    "player_id": "sofifa_id",
+    "short_name": "player_name",
+    "long_name": "player_name_full",
+    "dob": "date_of_birth",
+    "nationality_name": "nationality",
+    "club_name": "club",
+    "league_name": "league",
+    "player_positions": "position_detail",
+}
+
+# nyagami EA FC 25 schema (PascalCase; NO potential, NO dob, NO sofifa_id).
+FIFA_NYAGAMI_COLUMN_RENAME: dict[str, str] = {
+    "Name": "player_name",
+    "OVR": "overall",
+    "Age": "age",
+    "Nation": "nationality",
+    "League": "league",
+    "Team": "club",
+    "Position": "position_detail",
+    "url": "player_url",
+}
+
+# FIFA position codes → primary GK/DEF/MID/FWD. (normalize_position does NOT apply —
+# FIFA uses ST/CB/CM/… not FBref's GK/DF/MF/FW.) Multi-position strings ("ST, CF")
+# are resolved on the first token.
+FIFA_POSITION_MAP: dict[str, str] = {
+    "GK": "GK",
+    "CB": "DEF", "LB": "DEF", "RB": "DEF", "LWB": "DEF", "RWB": "DEF",
+    "LCB": "DEF", "RCB": "DEF", "SW": "DEF",
+    "CDM": "MID", "CM": "MID", "CAM": "MID", "LM": "MID", "RM": "MID",
+    "LDM": "MID", "RDM": "MID", "LCM": "MID", "RCM": "MID", "DM": "MID", "AM": "MID",
+    "ST": "FWD", "CF": "FWD", "LW": "FWD", "RW": "FWD", "LF": "FWD", "RF": "FWD",
+    "LS": "FWD", "RS": "FWD", "LWF": "FWD", "RWF": "FWD",
+}
+
+FIFA_YEAR_TO_SEASON: dict[int, str] = {
+    22: "2021-22", 23: "2022-23", 24: "2023-24", 25: "2024-25",
+}
