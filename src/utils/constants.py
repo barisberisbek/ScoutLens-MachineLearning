@@ -62,9 +62,11 @@ PER_90_STATS: list[str] = [
 ]
 
 # ── Trajectory lag stats (§10.9, REVISED) ───────────────────────────────────
+# xag_per_90 lag dropped: its source exists only for 2024-25 (Kaggle), so the prior-season
+# lag is always null. xg_per_90 is kept (Understat covers historical top-5).
 LAG_STATS: list[str] = [
     "goals_per_90", "assists_per_90", "shots_per_90",
-    "xg_per_90", "xag_per_90",
+    "xg_per_90",
     "minutes_played", "matches_played",
     "tackles_won_per_90", "interceptions_per_90",
     "log_market_value", "fifa_rating", "fifa_potential",

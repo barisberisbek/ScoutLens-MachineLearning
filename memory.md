@@ -1,7 +1,7 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** **PHASE 4 (FEATURE ENGINEERING) COMPLETE** (awaiting user review of `features_summary.md` before Phase 5). `data/processed/features.parquet` (19,356 × 195, +94 features). Phase 1-3 complete. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
+- **Current phase:** **PHASE 4 (FEATURE ENGINEERING) COMPLETE + reviewed.** `data/processed/features.parquet` (**19,356 × 193, +92 features**; xag lag cols dropped). Phase 1-3 complete. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
 - **Data inventory:** `data/processed/` → **`unified_panel.parquet` (19,356 rows × 207 cols, one per (player_id, season), 9 leagues × 4 seasons)**. `data/interim/` → kaggle/tm_*/fifa_ratings. `data/raw/` → fbref(396)/understat(20)/transfer_fees(548). **Committed:** `data/external/nationality_map.csv`, `data/manual/{match_log.csv, manual_id_overrides.csv (empty scaffold)}`, `reports/{decisions_log.md, name_resolution_audit.md, coverage_matrix.md}`.
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 2 Sessions 1-3 done (one sitting). Full pipeline in `src/integration/unified_panel_builder.py`: `load_fbref_stats` (11-table collision-safe merge, curated clean names + `<table>__` namespaced tail, hard-error on unexpected dup) → `resolve_backbone` → `split_id_collisions`+`split_minutes_overflow` (namesake guards) → `collapse_split_season` (sum counting / minutes-weighted pct / per-90 recomputed from totals / max-minutes club) → attach xG (Kaggle 24-25 > Understat hist > NaN), MV, contract, FIFA, league-meta → `finalize_panel`. `scripts/build_panel.py` orchestrates; `src/integration/panel_reports.py` writes the 2 reports. **21 tests green** (13 name-resolution + 8 panel-builder). Run scripts via `PYTHONPATH=. .venv/Scripts/python.exe scripts/x.py` (bash env-var syntax; `set PYTHONPATH=` is a no-op in the Bash tool).
@@ -164,7 +164,8 @@ Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 ## Phase Output Summaries
 
 ### Phase 4 — Feature Engineering (2026-06-08)
-`data/processed/features.parquet` (**19,356 × 195, +94 features**) via `src/features/` (9
+`data/processed/features.parquet` (**19,356 × 193, +92 features** — final after dropping the
+2 all-null xag lag cols) via `src/features/` (9
 modules + `build_features` orchestrator), `scripts/build_features.py`, `reports/features_summary.md`.
 Modules: per_90 (+10), composites (+6, incl. threshold `shooting_efficiency` & `composite_completeness`),
 z_scores (+30, `_z_pos`/`_z_league`, `<15`→NaN warn), age_curve (+6, position-conditional peaks),
@@ -172,9 +173,10 @@ contract (+3), lag (+26, gap-aware `consecutive_seasons`, sort-by-(player_id,sea
 (+1 `year_inflation_multiplier`; league mult already in panel), categorical (+11, pos+continent
 one-hot), fifa (+2). Constants added: revised `PER_90_STATS`/`LAG_STATS` (survivor set),
 `PEAK_AGE_BY_POSITION`, `YEAR_INFLATION`, `SEASON_END_YEAR`. **34 tests green** (21+13). No
-imputation/no row drops/no target transform (Phase 5). **KNOWN-USELESS COLUMN:** `xag_per_90_lag1`/
-`delta_xag_per_90` = 100% null (xag exists only for 2024-25 Kaggle → no prior-season lag); harmless,
-Phase 5 will ignore — candidate to drop from `LAG_STATS` if a clean feature set is wanted.
+imputation/no row drops/no target transform (Phase 5). **CLEANUP (user-approved):** dropped
+`xag_per_90` from `LAG_STATS` → removed the 2 all-null cols `xag_per_90_lag1`/`delta_xag_per_90`
+(xag source single-season). Verified 0 remaining 100%-null new cols; `features.parquet` final =
+**193 cols**. `xg_per_90_lag1`/`fifa_potential_lag1` KEPT (have historical data).
 Deferred to Phase 5: OOF target-encoding (nationality, league×position) — anti-leakage, inside CV fold.
 
 ### Phase 3 — EDA (2026-06-08)

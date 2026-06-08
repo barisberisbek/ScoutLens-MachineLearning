@@ -1,6 +1,6 @@
 # Features Summary (Phase 4)
 
-`unified_panel.parquet` (101 cols) → `features.parquet` (195 cols): **+94 engineered features**, 19,356 rows.
+`unified_panel.parquet` (101 cols) → `features.parquet` (193 cols): **+92 engineered features**, 19,356 rows.
 
 ## per-90 / per-match (M1) (10)
 
@@ -82,7 +82,7 @@
 | is_expiring | 0.0 |
 | is_long_contract | 0.0 |
 
-## lag / trajectory (M6) (26)
+## lag / trajectory (M6) (24)
 
 | column | % null |
 |---|---|
@@ -94,8 +94,6 @@
 | delta_shots_per_90 | 46.9 |
 | xg_per_90_lag1 | 69.1 |
 | delta_xg_per_90 | 71.1 |
-| xag_per_90_lag1 | 100.0 |
-| delta_xag_per_90 | 100.0 |
 | minutes_played_lag1 | 46.9 |
 | delta_minutes_played | 46.9 |
 | matches_played_lag1 | 46.9 |
@@ -145,24 +143,24 @@
 
 | position | mean % null (new cols) |
 |---|---|
-| DEF | 32.2 |
-| FWD | 33.5 |
-| GK | 25.8 |
-| MID | 32.0 |
+| DEF | 30.7 |
+| FWD | 32.0 |
+| GK | 24.1 |
+| MID | 30.5 |
 
 ## Top-10 highest-null new columns (debug)
 
 | column | % null |
 |---|---|
-| xag_per_90_lag1 | 100.0 |
-| delta_xag_per_90 | 100.0 |
-| clean_sheets_per_match_z_pos | 92.3 |
 | saves_per_90_z_pos | 92.3 |
-| saves_per_90 | 92.3 |
-| clean_sheets_per_match | 92.3 |
+| clean_sheets_per_match_z_pos | 92.3 |
 | shots_on_target_against_per_90 | 92.3 |
-| clean_sheets_per_match_z_league | 92.3 |
+| clean_sheets_per_match | 92.3 |
 | saves_per_90_z_league | 92.3 |
+| clean_sheets_per_match_z_league | 92.3 |
+| saves_per_90 | 92.3 |
 | xag_per_90 | 86.4 |
+| xag_per_90_z_league | 86.4 |
+| xag_per_90_z_pos | 86.4 |
 
 Note: high null is expected for xG-based features (top-5 only), GK stats (null for outfield), lag features in 2021-22 (no prior season), and 2024-25 `fifa_potential_gap` (FC25 has no potential). No imputation is done here — Phase 5 handles NaN (tree models natively, linear via a pipeline imputer).
