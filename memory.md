@@ -1,7 +1,7 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** **PHASE 3 (EDA) COMPLETE.** Unified panel explored; soccerdata extended-stat gap caught + handled (panel 207→101 cols, §6.2 revised). Phase 1-2 complete. **Next: Phase 4 — Feature Engineering** (`src/features/`, one transform per file; `feature_forwarder.py` tests MANDATORY; per-90s/z-scores/age-curve/trajectory; honor reduced §6.2 targets + position-conditional missingness). Optional: populate `manual_id_overrides.csv` from top-500-MV synthetics (deferred).
+- **Current phase:** **PHASE 4 (FEATURE ENGINEERING) COMPLETE** (awaiting user review of `features_summary.md` before Phase 5). `data/processed/features.parquet` (19,356 × 195, +94 features). Phase 1-3 complete. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
 - **Data inventory:** `data/processed/` → **`unified_panel.parquet` (19,356 rows × 207 cols, one per (player_id, season), 9 leagues × 4 seasons)**. `data/interim/` → kaggle/tm_*/fifa_ratings. `data/raw/` → fbref(396)/understat(20)/transfer_fees(548). **Committed:** `data/external/nationality_map.csv`, `data/manual/{match_log.csv, manual_id_overrides.csv (empty scaffold)}`, `reports/{decisions_log.md, name_resolution_audit.md, coverage_matrix.md}`.
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 2 Sessions 1-3 done (one sitting). Full pipeline in `src/integration/unified_panel_builder.py`: `load_fbref_stats` (11-table collision-safe merge, curated clean names + `<table>__` namespaced tail, hard-error on unexpected dup) → `resolve_backbone` → `split_id_collisions`+`split_minutes_overflow` (namesake guards) → `collapse_split_season` (sum counting / minutes-weighted pct / per-90 recomputed from totals / max-minutes club) → attach xG (Kaggle 24-25 > Understat hist > NaN), MV, contract, FIFA, league-meta → `finalize_panel`. `scripts/build_panel.py` orchestrates; `src/integration/panel_reports.py` writes the 2 reports. **21 tests green** (13 name-resolution + 8 panel-builder). Run scripts via `PYTHONPATH=. .venv/Scripts/python.exe scripts/x.py` (bash env-var syntax; `set PYTHONPATH=` is a no-op in the Bash tool).
@@ -16,7 +16,7 @@
 - [x] Phase 1F — External lookup CSVs (UEFA, continent, etc.)  ← done early in Phase 0
 - [x] Phase 2 — Data Integration
 - [x] Phase 3 — EDA
-- [ ] Phase 4 — Feature Engineering
+- [x] Phase 4 — Feature Engineering
 - [ ] Phase 5 — Stage 1 Modeling (×4 positions)
 - [ ] Phase 6 — Stage 2 Modeling (×4 positions)
 - [ ] Phase 7 — Pipeline Assembly + Validation
@@ -162,6 +162,20 @@ Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 - **2026-06-08: ROOT CAUSE of the "throttle" = Chrome process LEAK (not an FBref IP block).** When killing the scrape we found **646 chrome.exe + 13 uc_driver** processes leaked. `_fetch_one` creates a NEW `sd.FBref(...)` (→ new seleniumbase browser) PER COMBO and never closes it → ~1 browser leaked per combo → after ~200 combos the machine ran out of RAM/handles → new Chrome launches `Read timed out (localhost)` → soccerdata reports its GENERIC "failed CAPTCHA / IP block" message. The real errors were LOCAL timeouts, not FBref blocking. **FIX before resume:** make the scraper reuse ONE `sd.FBref` reader (or explicitly close the driver per combo), OR resume per-league in separate process runs (each exits and frees its browsers, bounding the leak to ~44). Cleanup: killed the 591 seleniumbase-leak Chrome by CommandLine signature (temp profile / `--window-position=-2400`), preserved the user's ~18 real-browser processes (default `User Data` profile). **RESOLVED:** added `reader._driver.quit()` in `_fetch_one`'s `finally` (`_close_reader`); verified chrome 15→15 after a combo. Resume then completed **396/396 cleanly** — chrome stayed ~15-30 (occasional transient spikes to ~80 that drop back, NOT accumulation), no throttle, combos ~20-45 s. Confirms a local leak, never an FBref IP block.
 
 ## Phase Output Summaries
+
+### Phase 4 — Feature Engineering (2026-06-08)
+`data/processed/features.parquet` (**19,356 × 195, +94 features**) via `src/features/` (9
+modules + `build_features` orchestrator), `scripts/build_features.py`, `reports/features_summary.md`.
+Modules: per_90 (+10), composites (+6, incl. threshold `shooting_efficiency` & `composite_completeness`),
+z_scores (+30, `_z_pos`/`_z_league`, `<15`→NaN warn), age_curve (+6, position-conditional peaks),
+contract (+3), lag (+26, gap-aware `consecutive_seasons`, sort-by-(player_id,season)), multipliers
+(+1 `year_inflation_multiplier`; league mult already in panel), categorical (+11, pos+continent
+one-hot), fifa (+2). Constants added: revised `PER_90_STATS`/`LAG_STATS` (survivor set),
+`PEAK_AGE_BY_POSITION`, `YEAR_INFLATION`, `SEASON_END_YEAR`. **34 tests green** (21+13). No
+imputation/no row drops/no target transform (Phase 5). **KNOWN-USELESS COLUMN:** `xag_per_90_lag1`/
+`delta_xag_per_90` = 100% null (xag exists only for 2024-25 Kaggle → no prior-season lag); harmless,
+Phase 5 will ignore — candidate to drop from `LAG_STATS` if a clean feature set is wanted.
+Deferred to Phase 5: OOF target-encoding (nationality, league×position) — anti-leakage, inside CV fold.
 
 ### Phase 3 — EDA (2026-06-08)
 `notebooks/01_data_exploration.ipynb` (10 sections, executed, outputs embedded, 3.6 MB) +

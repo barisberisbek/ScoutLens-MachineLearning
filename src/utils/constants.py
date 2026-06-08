@@ -50,22 +50,24 @@ def normalize_position(raw: str) -> str:
         raise ValueError(f"Unknown position code: {first!r} (from {raw!r})") from exc
 
 
-# ── Per-90 stats (§10.1) ────────────────────────────────────────────────────
+# ── Per-90 stats (§10.1, REVISED Phase-3/P2-D6) ─────────────────────────────
+# Survivor set only — the FBref extended stats (sca/gca/progressive_*/key_passes/
+# total-tackles/blocks/clearances/aerials/touches/psxg) are unavailable (soccerdata
+# gap). Counting stats here get a `<stat>_per_90` column in src/features/per_90.py.
 PER_90_STATS: list[str] = [
     "goals", "assists", "shots", "shots_on_target",
-    "xg", "xag", "npxg", "sca", "gca",
-    "progressive_passes", "progressive_carries", "key_passes",
-    "tackles", "interceptions", "blocks", "clearances",
-    "aerial_won", "aerial_lost",
-    "touches", "progressive_passes_received",
-    "fouls_committed", "fouls_drawn",
-    "saves", "goals_against", "psxg",
+    "xg", "xag", "npxg", "understat_xa", "understat_xg",
+    "saves", "tackles_won", "interceptions",
+    "goals_against", "shots_on_target_against",
 ]
 
-# ── Trajectory lag stats (§10.9) ────────────────────────────────────────────
+# ── Trajectory lag stats (§10.9, REVISED) ───────────────────────────────────
 LAG_STATS: list[str] = [
-    "xg_per_90", "minutes_played", "progressive_passes_per_90",
-    "xag_per_90", "tackles_per_90", "saves_per_90",
+    "goals_per_90", "assists_per_90", "shots_per_90",
+    "xg_per_90", "xag_per_90",
+    "minutes_played", "matches_played",
+    "tackles_won_per_90", "interceptions_per_90",
+    "log_market_value", "fifa_rating", "fifa_potential",
 ]
 
 # ── Minimum-minutes filters (§6.3) ──────────────────────────────────────────
@@ -578,3 +580,22 @@ FBREF_TABLE_PRIORITY: list[str] = [
     "standard", "shooting", "passing", "passing_types", "gca",
     "defense", "possession", "misc", "playing_time", "keeper", "keeper_adv",
 ]
+
+
+# ── Phase 4 feature engineering ─────────────────────────────────────────────
+# Position-conditional peak-value ages (Phase-3 Fig10: GK peaks far later than outfield).
+# Used by src/features/age_curve.py for `distance_from_peak`.
+PEAK_AGE_BY_POSITION: dict[str, int] = {"GK": 30, "DEF": 26, "MID": 25, "FWD": 26}
+
+# Cumulative market-value inflation vs the 2021-22 base (Phase-3 Fig03: +10/+14/+20% YoY).
+# Used by src/features/multipliers.py (D-07 anchor feature).
+YEAR_INFLATION: dict[str, float] = {
+    "2021-22": 1.000,
+    "2022-23": 1.100,
+    "2023-24": 1.254,   # 1.100 × 1.14
+    "2024-25": 1.505,   # 1.254 × 1.20
+}
+
+# Season → ending calendar year (derived from SEASON_END_DATES). Used by the lag module's
+# gap-aware `consecutive_seasons`.
+SEASON_END_YEAR: dict[str, int] = {s: int(d[:4]) for s, d in SEASON_END_DATES.items()}
