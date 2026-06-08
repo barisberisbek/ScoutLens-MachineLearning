@@ -138,13 +138,34 @@ def _flatten_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _close_reader(reader) -> None:
+    """Quit the reader's headless-Chrome driver.
+
+    soccerdata creates one ``sb.Driver`` (Chrome) per ``sd.FBref`` instance
+    (_common.py:565) and never closes it on garbage collection. Since we build a
+    fresh reader per combo, without this EVERY combo leaks a Chrome + uc_driver
+    process — which previously piled up to 646 browsers and exhausted RAM/handles
+    (mis-reported by soccerdata as "failed CAPTCHA / IP block"). Cleanup must never
+    mask the real result/error, hence the broad swallow.
+    """
+    driver = getattr(reader, "_driver", None)
+    if driver is not None:
+        try:
+            driver.quit()
+        except Exception:  # noqa: BLE001
+            pass
+
+
 def _fetch_one(league: str, season: str, stat_type: str) -> pd.DataFrame:
-    """Fetch one (league, season, stat_type) as a flat RAW DataFrame."""
+    """Fetch one (league, season, stat_type) as a flat RAW DataFrame (closes the browser)."""
     fbref_id = FBREF_LEAGUE_IDS[league]
     reader = sd.FBref(leagues=[fbref_id], seasons=[season])
-    df = reader.read_player_season_stats(stat_type=stat_type)
-    df = df.reset_index()
-    return _flatten_columns(df)
+    try:
+        df = reader.read_player_season_stats(stat_type=stat_type)
+        df = df.reset_index()
+        return _flatten_columns(df)
+    finally:
+        _close_reader(reader)
 
 
 def scrape_all_fbref(

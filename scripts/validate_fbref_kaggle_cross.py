@@ -60,25 +60,27 @@ def main() -> None:
 
         fb = load_parquet(std_path)
         fb_cols = [c for c in _STAT_MAP if c in fb.columns]
+        # Prefix FBref + Kaggle stat columns distinctly so the inner merge never
+        # collides them into _fb/_kg suffixes (which previously hid goals/assists/shots).
         fb_agg = _agg_by_name(fb, "player", fb_cols).rename(
-            columns={c: _STAT_MAP[c][1] for c in fb_cols}
+            columns={c: "fb_" + _STAT_MAP[c][1] for c in fb_cols}
         )
         if sh_path.exists():
             sh = load_parquet(sh_path)
             sh_cols = [c for c in _SHOOTING_MAP if c in sh.columns]
             if sh_cols:
                 sh_agg = _agg_by_name(sh, "player", sh_cols).rename(
-                    columns={c: _SHOOTING_MAP[c][1] for c in sh_cols}
+                    columns={c: "fb_" + _SHOOTING_MAP[c][1] for c in sh_cols}
                 )
                 fb_agg = fb_agg.merge(sh_agg, on="nkey", how="left")
 
         kl = kaggle[kaggle["league"] == league]
-        k_cols = [_STAT_MAP[c][0] for c in fb_cols] + (
-            ["shots"] if "shots" in fb_agg.columns else []
-        )
-        k_agg = _agg_by_name(kl, "player_name", k_cols)
+        kg_rename = {_STAT_MAP[c][0]: "kg_" + _STAT_MAP[c][1] for c in fb_cols}
+        if "fb_shots" in fb_agg.columns:
+            kg_rename["shots"] = "kg_shots"
+        k_agg = _agg_by_name(kl, "player_name", list(kg_rename)).rename(columns=kg_rename)
 
-        merged = fb_agg.merge(k_agg, on="nkey", how="inner", suffixes=("_fb", "_kg"))
+        merged = fb_agg.merge(k_agg, on="nkey", how="inner")
         n_fb, n_kg, n_m = len(fb_agg), len(k_agg), len(merged)
 
         lines.append(f"## {league}")
@@ -88,11 +90,10 @@ def main() -> None:
         lines.append("")
         lines.append("| stat | Pearson r | MAE | mean FBref | mean Kaggle |")
         lines.append("|---|---|---|---|---|")
-        for friendly, kcol in [("goals", "goals"), ("assists", "assists"),
-                               ("minutes", "minutes_played"), ("shots", "shots")]:
-            fb_c = friendly
-            if fb_c in merged.columns and kcol in merged.columns:
-                a, b = merged[fb_c], merged[kcol]
+        for friendly in ["goals", "assists", "minutes", "shots"]:
+            a_col, b_col = "fb_" + friendly, "kg_" + friendly
+            if a_col in merged.columns and b_col in merged.columns:
+                a, b = merged[a_col], merged[b_col]
                 mask = a.notna() & b.notna()
                 if mask.sum() > 5:
                     r = a[mask].corr(b[mask])

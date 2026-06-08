@@ -1,14 +1,15 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** Phase 1E complete → **all Phase-1 sub-phases done EXCEPT 1B finalization.** **Phase 1B FBref scrape RUNNING in background** (`b0w7cqcmc`; was 128/396 last checked) — coverage/cross-val/[x]/commit pending its completion. After 1B → Phase 2 (Integration).
+- **Current phase:** **PHASE 1 COMPLETE (all sub-phases 1A–1F done).** FBref scrape finished 396/396 after the leak fix. **Next: Phase 2 — Data Integration** (name resolution + unified panel).
+- **Data inventory (ready for Phase 2):** `data/interim/` → `kaggle_2024_25_clean`, `tm_{competitions,players,player_seasons,transfers,national_teams}`, `fifa_ratings`. `data/raw/` → `fbref/<league>/<season>/<11 stat_types>.parquet` (396, all 9 leagues × 4 seasons), `understat/<league>/<season>.parquet` (20, top-5 xG), `transfer_fees_2025/transfer_fees_2024_25.csv` (548 fee>0).
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 1E done — `src/data/fifa_loader.py` → `data/interim/fifa_ratings.parquet` (72,283 rows, 4 seasons). Env: `.venv` Python 3.13.1, pandas 3.0.3; run via `.venv\Scripts\python.exe` + `PYTHONPATH=<root>`.
 
 ## Phase Completion Log
 - [x] Phase 0 — Foundation (repo scaffolding)
 - [x] Phase 1A — Kaggle loader
-- [ ] Phase 1B — FBref scraper
+- [x] Phase 1B — FBref scraper
 - [x] Phase 1C — Transfermarkt-datasets ingest
 - [x] Phase 1D — 2025 transfer fees scraper
 - [x] Phase 1E — FIFA ratings loader
@@ -68,7 +69,8 @@ Phase 2 `name_resolver`.
 Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 
 ## Bug Log / Learnings
-Henüz yok.
+- **2026-06-08: Parallel scrape canceled** — FBref throttle risk too high (b0w7cqcmc already showing intermittent CAPTCHA / IP-block, save rate slowed to ~15 min/combo, 1 combo hard-failed `ligue_1/2324/playing_time`). A 2nd concurrent Chrome from the same IP would likely hard-block both. Lesson: one polite soccerdata scraper at a time.
+- **2026-06-08: ROOT CAUSE of the "throttle" = Chrome process LEAK (not an FBref IP block).** When killing the scrape we found **646 chrome.exe + 13 uc_driver** processes leaked. `_fetch_one` creates a NEW `sd.FBref(...)` (→ new seleniumbase browser) PER COMBO and never closes it → ~1 browser leaked per combo → after ~200 combos the machine ran out of RAM/handles → new Chrome launches `Read timed out (localhost)` → soccerdata reports its GENERIC "failed CAPTCHA / IP block" message. The real errors were LOCAL timeouts, not FBref blocking. **FIX before resume:** make the scraper reuse ONE `sd.FBref` reader (or explicitly close the driver per combo), OR resume per-league in separate process runs (each exits and frees its browsers, bounding the leak to ~44). Cleanup: killed the 591 seleniumbase-leak Chrome by CommandLine signature (temp profile / `--window-position=-2400`), preserved the user's ~18 real-browser processes (default `User Data` profile). **RESOLVED:** added `reader._driver.quit()` in `_fetch_one`'s `finally` (`_close_reader`); verified chrome 15→15 after a combo. Resume then completed **396/396 cleanly** — chrome stayed ~15-30 (occasional transient spikes to ~80 that drop back, NOT accumulation), no throttle, combos ~20-45 s. Confirms a local leak, never an FBref IP block.
 
 ## Phase Output Summaries
 
@@ -86,3 +88,6 @@ Scaffolded the full repository per PROJECT_ROADMAP.md §15: 42 directories, 52 f
 
 ### Phase 1E — FIFA / EA FC ratings loader (2026-06-08)
 `src/data/fifa_loader.py` + `scripts/load_fifa.py` → `data/interim/fifa_ratings.parquet` (**72,283 rows**, unified 14-col schema). **Source consolidation (key finding):** `EA FC 24/male_players.csv` holds one clean snapshot per fifa_version 15-24, so FIFA **22 (19,239) / 23 (18,533) / 24 (18,350)** all come from that one file — the 5.3 GB weekly-update `male_players.csv` and the legacy file are redundant and SKIPPED (IO-light). FC **25 (16,161)** from nyagami `EA FC 25/male_players.csv`. Added `FIFA_STEFANO_COLUMN_RENAME`, `FIFA_NYAGAMI_COLUMN_RENAME`, `FIFA_POSITION_MAP` (FIFA codes ST/CB/CM/GK… → primary; `normalize_position` does NOT apply), `FIFA_YEAR_TO_SEASON` to constants. **nyagami FC25 has NO `potential`/`dob`/sofifa_id** → null for 2024-25 (note for Phase 4: young-player potential feature missing for 24-25). stefano `player_id`=sofifa_id. 0 'Other' positions; Mbappé spot-check OVR 91, POT 95→94 (22-24), null (25). Phase-2 joins by name+age+nationality.
+
+### Phase 1B — FBref hybrid scrape (complete 2026-06-08)
+**396/396 combos** = 9 leagues × 4 seasons × 11 stat types (native standard/shooting/playing_time/keeper/misc + extended passing/passing_types/gca/defense/possession/keeper_adv via the monkeypatched `read_player_season_stats`). Output `data/raw/fbref/<slug>/<season>/<stat_type>.parquet` (gitignored). Plus **Understat 20/20** (top-5 × 4 seasons, xG source). Coverage validator: **416/416 present, 0 missing**; player counts ~490-660/league-season (Süper Lig ~660 slightly over the conservative range, benign). Cross-val vs Kaggle 2024-25 (PL+LaLiga): goals/assists/minutes **Pearson 1.000, MAE 0.00**, shots ~1.000 → FBref-soccerdata ≡ Kaggle for shared stats. The big saga: a Chrome-process leak (see Bug Log) masqueraded as throttling; fixed with per-combo `driver.quit()`, after which the scrape finished cleanly with no FBref block. Reports committed: `reports/fbref_coverage_summary.csv`, `reports/fbref_kaggle_cross_validation.md`.

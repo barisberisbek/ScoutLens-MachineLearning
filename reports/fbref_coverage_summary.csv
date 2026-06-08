@@ -5,396 +5,396 @@ fbref,Premier League,2122,playing_time,691,True
 fbref,Premier League,2122,keeper,42,True
 fbref,Premier League,2122,misc,546,True
 fbref,Premier League,2122,passing,546,True
-fbref,Premier League,2122,passing_types,0,False
-fbref,Premier League,2122,gca,0,False
-fbref,Premier League,2122,defense,0,False
-fbref,Premier League,2122,possession,0,False
-fbref,Premier League,2122,keeper_adv,0,False
-fbref,Premier League,2223,standard,0,False
-fbref,Premier League,2223,shooting,0,False
-fbref,Premier League,2223,playing_time,0,False
-fbref,Premier League,2223,keeper,0,False
-fbref,Premier League,2223,misc,0,False
-fbref,Premier League,2223,passing,0,False
-fbref,Premier League,2223,passing_types,0,False
-fbref,Premier League,2223,gca,0,False
-fbref,Premier League,2223,defense,0,False
-fbref,Premier League,2223,possession,0,False
-fbref,Premier League,2223,keeper_adv,0,False
+fbref,Premier League,2122,passing_types,546,True
+fbref,Premier League,2122,gca,546,True
+fbref,Premier League,2122,defense,546,True
+fbref,Premier League,2122,possession,546,True
+fbref,Premier League,2122,keeper_adv,42,True
+fbref,Premier League,2223,standard,569,True
+fbref,Premier League,2223,shooting,569,True
+fbref,Premier League,2223,playing_time,723,True
+fbref,Premier League,2223,keeper,39,True
+fbref,Premier League,2223,misc,569,True
+fbref,Premier League,2223,passing,569,True
+fbref,Premier League,2223,passing_types,569,True
+fbref,Premier League,2223,gca,569,True
+fbref,Premier League,2223,defense,569,True
+fbref,Premier League,2223,possession,569,True
+fbref,Premier League,2223,keeper_adv,39,True
 fbref,Premier League,2324,standard,580,True
 fbref,Premier League,2324,shooting,580,True
-fbref,Premier League,2324,playing_time,0,False
-fbref,Premier League,2324,keeper,0,False
-fbref,Premier League,2324,misc,0,False
+fbref,Premier League,2324,playing_time,746,True
+fbref,Premier League,2324,keeper,40,True
+fbref,Premier League,2324,misc,580,True
 fbref,Premier League,2324,passing,580,True
 fbref,Premier League,2324,passing_types,580,True
 fbref,Premier League,2324,gca,580,True
 fbref,Premier League,2324,defense,580,True
 fbref,Premier League,2324,possession,580,True
 fbref,Premier League,2324,keeper_adv,40,True
-fbref,Premier League,2425,standard,0,False
-fbref,Premier League,2425,shooting,0,False
-fbref,Premier League,2425,playing_time,0,False
-fbref,Premier League,2425,keeper,0,False
-fbref,Premier League,2425,misc,0,False
-fbref,Premier League,2425,passing,0,False
-fbref,Premier League,2425,passing_types,0,False
-fbref,Premier League,2425,gca,0,False
-fbref,Premier League,2425,defense,0,False
-fbref,Premier League,2425,possession,0,False
-fbref,Premier League,2425,keeper_adv,0,False
-fbref,La Liga,2122,standard,0,False
-fbref,La Liga,2122,shooting,0,False
-fbref,La Liga,2122,playing_time,0,False
-fbref,La Liga,2122,keeper,0,False
-fbref,La Liga,2122,misc,0,False
-fbref,La Liga,2122,passing,0,False
-fbref,La Liga,2122,passing_types,0,False
-fbref,La Liga,2122,gca,0,False
-fbref,La Liga,2122,defense,0,False
-fbref,La Liga,2122,possession,0,False
-fbref,La Liga,2122,keeper_adv,0,False
-fbref,La Liga,2223,standard,0,False
-fbref,La Liga,2223,shooting,0,False
-fbref,La Liga,2223,playing_time,0,False
-fbref,La Liga,2223,keeper,0,False
-fbref,La Liga,2223,misc,0,False
-fbref,La Liga,2223,passing,0,False
-fbref,La Liga,2223,passing_types,0,False
-fbref,La Liga,2223,gca,0,False
-fbref,La Liga,2223,defense,0,False
-fbref,La Liga,2223,possession,0,False
-fbref,La Liga,2223,keeper_adv,0,False
-fbref,La Liga,2324,standard,0,False
-fbref,La Liga,2324,shooting,0,False
-fbref,La Liga,2324,playing_time,0,False
-fbref,La Liga,2324,keeper,0,False
-fbref,La Liga,2324,misc,0,False
-fbref,La Liga,2324,passing,0,False
-fbref,La Liga,2324,passing_types,0,False
-fbref,La Liga,2324,gca,0,False
-fbref,La Liga,2324,defense,0,False
-fbref,La Liga,2324,possession,0,False
-fbref,La Liga,2324,keeper_adv,0,False
-fbref,La Liga,2425,standard,0,False
-fbref,La Liga,2425,shooting,0,False
-fbref,La Liga,2425,playing_time,0,False
-fbref,La Liga,2425,keeper,0,False
-fbref,La Liga,2425,misc,0,False
-fbref,La Liga,2425,passing,0,False
-fbref,La Liga,2425,passing_types,0,False
-fbref,La Liga,2425,gca,0,False
-fbref,La Liga,2425,defense,0,False
-fbref,La Liga,2425,possession,0,False
-fbref,La Liga,2425,keeper_adv,0,False
-fbref,Bundesliga,2122,standard,0,False
-fbref,Bundesliga,2122,shooting,0,False
-fbref,Bundesliga,2122,playing_time,0,False
-fbref,Bundesliga,2122,keeper,0,False
-fbref,Bundesliga,2122,misc,0,False
-fbref,Bundesliga,2122,passing,0,False
-fbref,Bundesliga,2122,passing_types,0,False
-fbref,Bundesliga,2122,gca,0,False
-fbref,Bundesliga,2122,defense,0,False
-fbref,Bundesliga,2122,possession,0,False
-fbref,Bundesliga,2122,keeper_adv,0,False
-fbref,Bundesliga,2223,standard,0,False
-fbref,Bundesliga,2223,shooting,0,False
-fbref,Bundesliga,2223,playing_time,0,False
-fbref,Bundesliga,2223,keeper,0,False
-fbref,Bundesliga,2223,misc,0,False
-fbref,Bundesliga,2223,passing,0,False
-fbref,Bundesliga,2223,passing_types,0,False
-fbref,Bundesliga,2223,gca,0,False
-fbref,Bundesliga,2223,defense,0,False
-fbref,Bundesliga,2223,possession,0,False
-fbref,Bundesliga,2223,keeper_adv,0,False
-fbref,Bundesliga,2324,standard,0,False
-fbref,Bundesliga,2324,shooting,0,False
-fbref,Bundesliga,2324,playing_time,0,False
-fbref,Bundesliga,2324,keeper,0,False
-fbref,Bundesliga,2324,misc,0,False
-fbref,Bundesliga,2324,passing,0,False
-fbref,Bundesliga,2324,passing_types,0,False
-fbref,Bundesliga,2324,gca,0,False
-fbref,Bundesliga,2324,defense,0,False
-fbref,Bundesliga,2324,possession,0,False
-fbref,Bundesliga,2324,keeper_adv,0,False
-fbref,Bundesliga,2425,standard,0,False
-fbref,Bundesliga,2425,shooting,0,False
-fbref,Bundesliga,2425,playing_time,0,False
-fbref,Bundesliga,2425,keeper,0,False
-fbref,Bundesliga,2425,misc,0,False
-fbref,Bundesliga,2425,passing,0,False
-fbref,Bundesliga,2425,passing_types,0,False
-fbref,Bundesliga,2425,gca,0,False
-fbref,Bundesliga,2425,defense,0,False
-fbref,Bundesliga,2425,possession,0,False
-fbref,Bundesliga,2425,keeper_adv,0,False
-fbref,Serie A,2122,standard,0,False
-fbref,Serie A,2122,shooting,0,False
-fbref,Serie A,2122,playing_time,0,False
-fbref,Serie A,2122,keeper,0,False
-fbref,Serie A,2122,misc,0,False
-fbref,Serie A,2122,passing,0,False
-fbref,Serie A,2122,passing_types,0,False
-fbref,Serie A,2122,gca,0,False
-fbref,Serie A,2122,defense,0,False
-fbref,Serie A,2122,possession,0,False
-fbref,Serie A,2122,keeper_adv,0,False
-fbref,Serie A,2223,standard,0,False
-fbref,Serie A,2223,shooting,0,False
-fbref,Serie A,2223,playing_time,0,False
-fbref,Serie A,2223,keeper,0,False
-fbref,Serie A,2223,misc,0,False
-fbref,Serie A,2223,passing,0,False
-fbref,Serie A,2223,passing_types,0,False
-fbref,Serie A,2223,gca,0,False
-fbref,Serie A,2223,defense,0,False
-fbref,Serie A,2223,possession,0,False
-fbref,Serie A,2223,keeper_adv,0,False
-fbref,Serie A,2324,standard,0,False
-fbref,Serie A,2324,shooting,0,False
-fbref,Serie A,2324,playing_time,0,False
-fbref,Serie A,2324,keeper,0,False
-fbref,Serie A,2324,misc,0,False
-fbref,Serie A,2324,passing,0,False
-fbref,Serie A,2324,passing_types,0,False
-fbref,Serie A,2324,gca,0,False
-fbref,Serie A,2324,defense,0,False
-fbref,Serie A,2324,possession,0,False
-fbref,Serie A,2324,keeper_adv,0,False
-fbref,Serie A,2425,standard,0,False
-fbref,Serie A,2425,shooting,0,False
-fbref,Serie A,2425,playing_time,0,False
-fbref,Serie A,2425,keeper,0,False
-fbref,Serie A,2425,misc,0,False
-fbref,Serie A,2425,passing,0,False
-fbref,Serie A,2425,passing_types,0,False
-fbref,Serie A,2425,gca,0,False
-fbref,Serie A,2425,defense,0,False
-fbref,Serie A,2425,possession,0,False
-fbref,Serie A,2425,keeper_adv,0,False
-fbref,Ligue 1,2122,standard,0,False
-fbref,Ligue 1,2122,shooting,0,False
-fbref,Ligue 1,2122,playing_time,0,False
-fbref,Ligue 1,2122,keeper,0,False
-fbref,Ligue 1,2122,misc,0,False
-fbref,Ligue 1,2122,passing,0,False
-fbref,Ligue 1,2122,passing_types,0,False
-fbref,Ligue 1,2122,gca,0,False
-fbref,Ligue 1,2122,defense,0,False
-fbref,Ligue 1,2122,possession,0,False
-fbref,Ligue 1,2122,keeper_adv,0,False
-fbref,Ligue 1,2223,standard,0,False
-fbref,Ligue 1,2223,shooting,0,False
-fbref,Ligue 1,2223,playing_time,0,False
-fbref,Ligue 1,2223,keeper,0,False
-fbref,Ligue 1,2223,misc,0,False
-fbref,Ligue 1,2223,passing,0,False
-fbref,Ligue 1,2223,passing_types,0,False
-fbref,Ligue 1,2223,gca,0,False
-fbref,Ligue 1,2223,defense,0,False
-fbref,Ligue 1,2223,possession,0,False
-fbref,Ligue 1,2223,keeper_adv,0,False
-fbref,Ligue 1,2324,standard,0,False
-fbref,Ligue 1,2324,shooting,0,False
-fbref,Ligue 1,2324,playing_time,0,False
-fbref,Ligue 1,2324,keeper,0,False
-fbref,Ligue 1,2324,misc,0,False
-fbref,Ligue 1,2324,passing,0,False
-fbref,Ligue 1,2324,passing_types,0,False
-fbref,Ligue 1,2324,gca,0,False
-fbref,Ligue 1,2324,defense,0,False
-fbref,Ligue 1,2324,possession,0,False
-fbref,Ligue 1,2324,keeper_adv,0,False
-fbref,Ligue 1,2425,standard,0,False
-fbref,Ligue 1,2425,shooting,0,False
-fbref,Ligue 1,2425,playing_time,0,False
-fbref,Ligue 1,2425,keeper,0,False
-fbref,Ligue 1,2425,misc,0,False
-fbref,Ligue 1,2425,passing,0,False
-fbref,Ligue 1,2425,passing_types,0,False
-fbref,Ligue 1,2425,gca,0,False
-fbref,Ligue 1,2425,defense,0,False
-fbref,Ligue 1,2425,possession,0,False
-fbref,Ligue 1,2425,keeper_adv,0,False
-fbref,Eredivisie,2122,standard,0,False
-fbref,Eredivisie,2122,shooting,0,False
-fbref,Eredivisie,2122,playing_time,0,False
-fbref,Eredivisie,2122,keeper,0,False
-fbref,Eredivisie,2122,misc,0,False
-fbref,Eredivisie,2122,passing,0,False
-fbref,Eredivisie,2122,passing_types,0,False
-fbref,Eredivisie,2122,gca,0,False
-fbref,Eredivisie,2122,defense,0,False
-fbref,Eredivisie,2122,possession,0,False
-fbref,Eredivisie,2122,keeper_adv,0,False
-fbref,Eredivisie,2223,standard,0,False
-fbref,Eredivisie,2223,shooting,0,False
-fbref,Eredivisie,2223,playing_time,0,False
-fbref,Eredivisie,2223,keeper,0,False
-fbref,Eredivisie,2223,misc,0,False
-fbref,Eredivisie,2223,passing,0,False
-fbref,Eredivisie,2223,passing_types,0,False
-fbref,Eredivisie,2223,gca,0,False
-fbref,Eredivisie,2223,defense,0,False
-fbref,Eredivisie,2223,possession,0,False
-fbref,Eredivisie,2223,keeper_adv,0,False
+fbref,Premier League,2425,standard,574,True
+fbref,Premier League,2425,shooting,574,True
+fbref,Premier League,2425,playing_time,702,True
+fbref,Premier League,2425,keeper,44,True
+fbref,Premier League,2425,misc,574,True
+fbref,Premier League,2425,passing,574,True
+fbref,Premier League,2425,passing_types,574,True
+fbref,Premier League,2425,gca,574,True
+fbref,Premier League,2425,defense,574,True
+fbref,Premier League,2425,possession,574,True
+fbref,Premier League,2425,keeper_adv,44,True
+fbref,La Liga,2122,standard,617,True
+fbref,La Liga,2122,shooting,617,True
+fbref,La Liga,2122,playing_time,762,True
+fbref,La Liga,2122,keeper,45,True
+fbref,La Liga,2122,misc,617,True
+fbref,La Liga,2122,passing,617,True
+fbref,La Liga,2122,passing_types,617,True
+fbref,La Liga,2122,gca,617,True
+fbref,La Liga,2122,defense,617,True
+fbref,La Liga,2122,possession,617,True
+fbref,La Liga,2122,keeper_adv,45,True
+fbref,La Liga,2223,standard,596,True
+fbref,La Liga,2223,shooting,596,True
+fbref,La Liga,2223,playing_time,728,True
+fbref,La Liga,2223,keeper,44,True
+fbref,La Liga,2223,misc,596,True
+fbref,La Liga,2223,passing,596,True
+fbref,La Liga,2223,passing_types,596,True
+fbref,La Liga,2223,gca,596,True
+fbref,La Liga,2223,defense,596,True
+fbref,La Liga,2223,possession,596,True
+fbref,La Liga,2223,keeper_adv,44,True
+fbref,La Liga,2324,standard,609,True
+fbref,La Liga,2324,shooting,609,True
+fbref,La Liga,2324,playing_time,741,True
+fbref,La Liga,2324,keeper,46,True
+fbref,La Liga,2324,misc,609,True
+fbref,La Liga,2324,passing,609,True
+fbref,La Liga,2324,passing_types,609,True
+fbref,La Liga,2324,gca,609,True
+fbref,La Liga,2324,defense,609,True
+fbref,La Liga,2324,possession,609,True
+fbref,La Liga,2324,keeper_adv,46,True
+fbref,La Liga,2425,standard,601,True
+fbref,La Liga,2425,shooting,601,True
+fbref,La Liga,2425,playing_time,749,True
+fbref,La Liga,2425,keeper,45,True
+fbref,La Liga,2425,misc,601,True
+fbref,La Liga,2425,passing,601,True
+fbref,La Liga,2425,passing_types,601,True
+fbref,La Liga,2425,gca,601,True
+fbref,La Liga,2425,defense,601,True
+fbref,La Liga,2425,possession,601,True
+fbref,La Liga,2425,keeper_adv,45,True
+fbref,Bundesliga,2122,standard,523,True
+fbref,Bundesliga,2122,shooting,523,True
+fbref,Bundesliga,2122,playing_time,601,True
+fbref,Bundesliga,2122,keeper,41,True
+fbref,Bundesliga,2122,misc,523,True
+fbref,Bundesliga,2122,passing,523,True
+fbref,Bundesliga,2122,passing_types,523,True
+fbref,Bundesliga,2122,gca,523,True
+fbref,Bundesliga,2122,defense,523,True
+fbref,Bundesliga,2122,possession,523,True
+fbref,Bundesliga,2122,keeper_adv,41,True
+fbref,Bundesliga,2223,standard,515,True
+fbref,Bundesliga,2223,shooting,515,True
+fbref,Bundesliga,2223,playing_time,599,True
+fbref,Bundesliga,2223,keeper,35,True
+fbref,Bundesliga,2223,misc,515,True
+fbref,Bundesliga,2223,passing,515,True
+fbref,Bundesliga,2223,passing_types,515,True
+fbref,Bundesliga,2223,gca,515,True
+fbref,Bundesliga,2223,defense,515,True
+fbref,Bundesliga,2223,possession,515,True
+fbref,Bundesliga,2223,keeper_adv,35,True
+fbref,Bundesliga,2324,standard,507,True
+fbref,Bundesliga,2324,shooting,507,True
+fbref,Bundesliga,2324,playing_time,583,True
+fbref,Bundesliga,2324,keeper,33,True
+fbref,Bundesliga,2324,misc,507,True
+fbref,Bundesliga,2324,passing,507,True
+fbref,Bundesliga,2324,passing_types,507,True
+fbref,Bundesliga,2324,gca,507,True
+fbref,Bundesliga,2324,defense,507,True
+fbref,Bundesliga,2324,possession,507,True
+fbref,Bundesliga,2324,keeper_adv,33,True
+fbref,Bundesliga,2425,standard,492,True
+fbref,Bundesliga,2425,shooting,492,True
+fbref,Bundesliga,2425,playing_time,579,True
+fbref,Bundesliga,2425,keeper,38,True
+fbref,Bundesliga,2425,misc,492,True
+fbref,Bundesliga,2425,passing,492,True
+fbref,Bundesliga,2425,passing_types,492,True
+fbref,Bundesliga,2425,gca,492,True
+fbref,Bundesliga,2425,defense,492,True
+fbref,Bundesliga,2425,possession,492,True
+fbref,Bundesliga,2425,keeper_adv,38,True
+fbref,Serie A,2122,standard,632,True
+fbref,Serie A,2122,shooting,632,True
+fbref,Serie A,2122,playing_time,808,True
+fbref,Serie A,2122,keeper,49,True
+fbref,Serie A,2122,misc,632,True
+fbref,Serie A,2122,passing,632,True
+fbref,Serie A,2122,passing_types,632,True
+fbref,Serie A,2122,gca,632,True
+fbref,Serie A,2122,defense,632,True
+fbref,Serie A,2122,possession,632,True
+fbref,Serie A,2122,keeper_adv,49,True
+fbref,Serie A,2223,standard,603,True
+fbref,Serie A,2223,shooting,603,True
+fbref,Serie A,2223,playing_time,761,True
+fbref,Serie A,2223,keeper,49,True
+fbref,Serie A,2223,misc,603,True
+fbref,Serie A,2223,passing,603,True
+fbref,Serie A,2223,passing_types,603,True
+fbref,Serie A,2223,gca,603,True
+fbref,Serie A,2223,defense,603,True
+fbref,Serie A,2223,possession,603,True
+fbref,Serie A,2223,keeper_adv,49,True
+fbref,Serie A,2324,standard,616,True
+fbref,Serie A,2324,shooting,616,True
+fbref,Serie A,2324,playing_time,787,True
+fbref,Serie A,2324,keeper,51,True
+fbref,Serie A,2324,misc,616,True
+fbref,Serie A,2324,passing,616,True
+fbref,Serie A,2324,passing_types,616,True
+fbref,Serie A,2324,gca,616,True
+fbref,Serie A,2324,defense,616,True
+fbref,Serie A,2324,possession,616,True
+fbref,Serie A,2324,keeper_adv,51,True
+fbref,Serie A,2425,standard,634,True
+fbref,Serie A,2425,shooting,634,True
+fbref,Serie A,2425,playing_time,812,True
+fbref,Serie A,2425,keeper,49,True
+fbref,Serie A,2425,misc,634,True
+fbref,Serie A,2425,passing,634,True
+fbref,Serie A,2425,passing_types,634,True
+fbref,Serie A,2425,gca,634,True
+fbref,Serie A,2425,defense,634,True
+fbref,Serie A,2425,possession,634,True
+fbref,Serie A,2425,keeper_adv,49,True
+fbref,Ligue 1,2122,standard,604,True
+fbref,Ligue 1,2122,shooting,604,True
+fbref,Ligue 1,2122,playing_time,729,True
+fbref,Ligue 1,2122,keeper,41,True
+fbref,Ligue 1,2122,misc,604,True
+fbref,Ligue 1,2122,passing,604,True
+fbref,Ligue 1,2122,passing_types,604,True
+fbref,Ligue 1,2122,gca,604,True
+fbref,Ligue 1,2122,defense,604,True
+fbref,Ligue 1,2122,possession,604,True
+fbref,Ligue 1,2122,keeper_adv,41,True
+fbref,Ligue 1,2223,standard,606,True
+fbref,Ligue 1,2223,shooting,606,True
+fbref,Ligue 1,2223,playing_time,716,True
+fbref,Ligue 1,2223,keeper,41,True
+fbref,Ligue 1,2223,misc,606,True
+fbref,Ligue 1,2223,passing,606,True
+fbref,Ligue 1,2223,passing_types,606,True
+fbref,Ligue 1,2223,gca,606,True
+fbref,Ligue 1,2223,defense,606,True
+fbref,Ligue 1,2223,possession,606,True
+fbref,Ligue 1,2223,keeper_adv,41,True
+fbref,Ligue 1,2324,standard,540,True
+fbref,Ligue 1,2324,shooting,540,True
+fbref,Ligue 1,2324,playing_time,655,True
+fbref,Ligue 1,2324,keeper,33,True
+fbref,Ligue 1,2324,misc,540,True
+fbref,Ligue 1,2324,passing,540,True
+fbref,Ligue 1,2324,passing_types,540,True
+fbref,Ligue 1,2324,gca,540,True
+fbref,Ligue 1,2324,defense,540,True
+fbref,Ligue 1,2324,possession,540,True
+fbref,Ligue 1,2324,keeper_adv,33,True
+fbref,Ligue 1,2425,standard,553,True
+fbref,Ligue 1,2425,shooting,553,True
+fbref,Ligue 1,2425,playing_time,666,True
+fbref,Ligue 1,2425,keeper,36,True
+fbref,Ligue 1,2425,misc,553,True
+fbref,Ligue 1,2425,passing,553,True
+fbref,Ligue 1,2425,passing_types,553,True
+fbref,Ligue 1,2425,gca,553,True
+fbref,Ligue 1,2425,defense,553,True
+fbref,Ligue 1,2425,possession,553,True
+fbref,Ligue 1,2425,keeper_adv,36,True
+fbref,Eredivisie,2122,standard,533,True
+fbref,Eredivisie,2122,shooting,533,True
+fbref,Eredivisie,2122,playing_time,642,True
+fbref,Eredivisie,2122,keeper,40,True
+fbref,Eredivisie,2122,misc,533,True
+fbref,Eredivisie,2122,passing,533,True
+fbref,Eredivisie,2122,passing_types,533,True
+fbref,Eredivisie,2122,gca,533,True
+fbref,Eredivisie,2122,defense,533,True
+fbref,Eredivisie,2122,possession,533,True
+fbref,Eredivisie,2122,keeper_adv,40,True
+fbref,Eredivisie,2223,standard,526,True
+fbref,Eredivisie,2223,shooting,526,True
+fbref,Eredivisie,2223,playing_time,632,True
+fbref,Eredivisie,2223,keeper,39,True
+fbref,Eredivisie,2223,misc,526,True
+fbref,Eredivisie,2223,passing,526,True
+fbref,Eredivisie,2223,passing_types,526,True
+fbref,Eredivisie,2223,gca,526,True
+fbref,Eredivisie,2223,defense,526,True
+fbref,Eredivisie,2223,possession,526,True
+fbref,Eredivisie,2223,keeper_adv,39,True
 fbref,Eredivisie,2324,standard,524,True
-fbref,Eredivisie,2324,shooting,0,False
-fbref,Eredivisie,2324,playing_time,0,False
-fbref,Eredivisie,2324,keeper,0,False
-fbref,Eredivisie,2324,misc,0,False
+fbref,Eredivisie,2324,shooting,524,True
+fbref,Eredivisie,2324,playing_time,639,True
+fbref,Eredivisie,2324,keeper,38,True
+fbref,Eredivisie,2324,misc,524,True
 fbref,Eredivisie,2324,passing,524,True
-fbref,Eredivisie,2324,passing_types,0,False
+fbref,Eredivisie,2324,passing_types,524,True
 fbref,Eredivisie,2324,gca,524,True
 fbref,Eredivisie,2324,defense,524,True
-fbref,Eredivisie,2324,possession,0,False
-fbref,Eredivisie,2324,keeper_adv,0,False
-fbref,Eredivisie,2425,standard,0,False
-fbref,Eredivisie,2425,shooting,0,False
-fbref,Eredivisie,2425,playing_time,0,False
-fbref,Eredivisie,2425,keeper,0,False
-fbref,Eredivisie,2425,misc,0,False
-fbref,Eredivisie,2425,passing,0,False
-fbref,Eredivisie,2425,passing_types,0,False
-fbref,Eredivisie,2425,gca,0,False
-fbref,Eredivisie,2425,defense,0,False
-fbref,Eredivisie,2425,possession,0,False
-fbref,Eredivisie,2425,keeper_adv,0,False
-fbref,Liga Portugal,2122,standard,0,False
-fbref,Liga Portugal,2122,shooting,0,False
-fbref,Liga Portugal,2122,playing_time,0,False
-fbref,Liga Portugal,2122,keeper,0,False
-fbref,Liga Portugal,2122,misc,0,False
-fbref,Liga Portugal,2122,passing,0,False
-fbref,Liga Portugal,2122,passing_types,0,False
-fbref,Liga Portugal,2122,gca,0,False
-fbref,Liga Portugal,2122,defense,0,False
-fbref,Liga Portugal,2122,possession,0,False
-fbref,Liga Portugal,2122,keeper_adv,0,False
-fbref,Liga Portugal,2223,standard,0,False
-fbref,Liga Portugal,2223,shooting,0,False
-fbref,Liga Portugal,2223,playing_time,0,False
-fbref,Liga Portugal,2223,keeper,0,False
-fbref,Liga Portugal,2223,misc,0,False
-fbref,Liga Portugal,2223,passing,0,False
-fbref,Liga Portugal,2223,passing_types,0,False
-fbref,Liga Portugal,2223,gca,0,False
-fbref,Liga Portugal,2223,defense,0,False
-fbref,Liga Portugal,2223,possession,0,False
-fbref,Liga Portugal,2223,keeper_adv,0,False
-fbref,Liga Portugal,2324,standard,0,False
-fbref,Liga Portugal,2324,shooting,0,False
-fbref,Liga Portugal,2324,playing_time,0,False
-fbref,Liga Portugal,2324,keeper,0,False
-fbref,Liga Portugal,2324,misc,0,False
-fbref,Liga Portugal,2324,passing,0,False
-fbref,Liga Portugal,2324,passing_types,0,False
-fbref,Liga Portugal,2324,gca,0,False
-fbref,Liga Portugal,2324,defense,0,False
-fbref,Liga Portugal,2324,possession,0,False
-fbref,Liga Portugal,2324,keeper_adv,0,False
-fbref,Liga Portugal,2425,standard,0,False
-fbref,Liga Portugal,2425,shooting,0,False
-fbref,Liga Portugal,2425,playing_time,0,False
-fbref,Liga Portugal,2425,keeper,0,False
-fbref,Liga Portugal,2425,misc,0,False
-fbref,Liga Portugal,2425,passing,0,False
-fbref,Liga Portugal,2425,passing_types,0,False
-fbref,Liga Portugal,2425,gca,0,False
-fbref,Liga Portugal,2425,defense,0,False
-fbref,Liga Portugal,2425,possession,0,False
-fbref,Liga Portugal,2425,keeper_adv,0,False
-fbref,Belgian Pro League,2122,standard,0,False
-fbref,Belgian Pro League,2122,shooting,0,False
-fbref,Belgian Pro League,2122,playing_time,0,False
-fbref,Belgian Pro League,2122,keeper,0,False
-fbref,Belgian Pro League,2122,misc,0,False
-fbref,Belgian Pro League,2122,passing,0,False
-fbref,Belgian Pro League,2122,passing_types,0,False
-fbref,Belgian Pro League,2122,gca,0,False
-fbref,Belgian Pro League,2122,defense,0,False
-fbref,Belgian Pro League,2122,possession,0,False
-fbref,Belgian Pro League,2122,keeper_adv,0,False
-fbref,Belgian Pro League,2223,standard,0,False
-fbref,Belgian Pro League,2223,shooting,0,False
-fbref,Belgian Pro League,2223,playing_time,0,False
-fbref,Belgian Pro League,2223,keeper,0,False
-fbref,Belgian Pro League,2223,misc,0,False
-fbref,Belgian Pro League,2223,passing,0,False
-fbref,Belgian Pro League,2223,passing_types,0,False
-fbref,Belgian Pro League,2223,gca,0,False
-fbref,Belgian Pro League,2223,defense,0,False
-fbref,Belgian Pro League,2223,possession,0,False
-fbref,Belgian Pro League,2223,keeper_adv,0,False
-fbref,Belgian Pro League,2324,standard,0,False
-fbref,Belgian Pro League,2324,shooting,0,False
-fbref,Belgian Pro League,2324,playing_time,0,False
-fbref,Belgian Pro League,2324,keeper,0,False
-fbref,Belgian Pro League,2324,misc,0,False
-fbref,Belgian Pro League,2324,passing,0,False
-fbref,Belgian Pro League,2324,passing_types,0,False
-fbref,Belgian Pro League,2324,gca,0,False
-fbref,Belgian Pro League,2324,defense,0,False
-fbref,Belgian Pro League,2324,possession,0,False
-fbref,Belgian Pro League,2324,keeper_adv,0,False
-fbref,Belgian Pro League,2425,standard,0,False
-fbref,Belgian Pro League,2425,shooting,0,False
-fbref,Belgian Pro League,2425,playing_time,0,False
-fbref,Belgian Pro League,2425,keeper,0,False
-fbref,Belgian Pro League,2425,misc,0,False
-fbref,Belgian Pro League,2425,passing,0,False
-fbref,Belgian Pro League,2425,passing_types,0,False
-fbref,Belgian Pro League,2425,gca,0,False
-fbref,Belgian Pro League,2425,defense,0,False
-fbref,Belgian Pro League,2425,possession,0,False
-fbref,Belgian Pro League,2425,keeper_adv,0,False
-fbref,Süper Lig,2122,standard,0,False
-fbref,Süper Lig,2122,shooting,0,False
-fbref,Süper Lig,2122,playing_time,0,False
-fbref,Süper Lig,2122,keeper,0,False
-fbref,Süper Lig,2122,misc,0,False
-fbref,Süper Lig,2122,passing,0,False
-fbref,Süper Lig,2122,passing_types,0,False
-fbref,Süper Lig,2122,gca,0,False
-fbref,Süper Lig,2122,defense,0,False
-fbref,Süper Lig,2122,possession,0,False
-fbref,Süper Lig,2122,keeper_adv,0,False
-fbref,Süper Lig,2223,standard,0,False
-fbref,Süper Lig,2223,shooting,0,False
-fbref,Süper Lig,2223,playing_time,0,False
-fbref,Süper Lig,2223,keeper,0,False
-fbref,Süper Lig,2223,misc,0,False
-fbref,Süper Lig,2223,passing,0,False
-fbref,Süper Lig,2223,passing_types,0,False
-fbref,Süper Lig,2223,gca,0,False
-fbref,Süper Lig,2223,defense,0,False
-fbref,Süper Lig,2223,possession,0,False
-fbref,Süper Lig,2223,keeper_adv,0,False
-fbref,Süper Lig,2324,standard,0,False
-fbref,Süper Lig,2324,shooting,0,False
-fbref,Süper Lig,2324,playing_time,0,False
-fbref,Süper Lig,2324,keeper,0,False
-fbref,Süper Lig,2324,misc,0,False
-fbref,Süper Lig,2324,passing,0,False
-fbref,Süper Lig,2324,passing_types,0,False
-fbref,Süper Lig,2324,gca,0,False
-fbref,Süper Lig,2324,defense,0,False
-fbref,Süper Lig,2324,possession,0,False
-fbref,Süper Lig,2324,keeper_adv,0,False
-fbref,Süper Lig,2425,standard,0,False
-fbref,Süper Lig,2425,shooting,0,False
-fbref,Süper Lig,2425,playing_time,0,False
-fbref,Süper Lig,2425,keeper,0,False
-fbref,Süper Lig,2425,misc,0,False
-fbref,Süper Lig,2425,passing,0,False
-fbref,Süper Lig,2425,passing_types,0,False
-fbref,Süper Lig,2425,gca,0,False
-fbref,Süper Lig,2425,defense,0,False
-fbref,Süper Lig,2425,possession,0,False
-fbref,Süper Lig,2425,keeper_adv,0,False
+fbref,Eredivisie,2324,possession,524,True
+fbref,Eredivisie,2324,keeper_adv,38,True
+fbref,Eredivisie,2425,standard,534,True
+fbref,Eredivisie,2425,shooting,534,True
+fbref,Eredivisie,2425,playing_time,643,True
+fbref,Eredivisie,2425,keeper,38,True
+fbref,Eredivisie,2425,misc,534,True
+fbref,Eredivisie,2425,passing,534,True
+fbref,Eredivisie,2425,passing_types,534,True
+fbref,Eredivisie,2425,gca,534,True
+fbref,Eredivisie,2425,defense,534,True
+fbref,Eredivisie,2425,possession,534,True
+fbref,Eredivisie,2425,keeper_adv,38,True
+fbref,Liga Portugal,2122,standard,581,True
+fbref,Liga Portugal,2122,shooting,581,True
+fbref,Liga Portugal,2122,playing_time,642,True
+fbref,Liga Portugal,2122,keeper,49,True
+fbref,Liga Portugal,2122,misc,581,True
+fbref,Liga Portugal,2122,passing,581,True
+fbref,Liga Portugal,2122,passing_types,581,True
+fbref,Liga Portugal,2122,gca,581,True
+fbref,Liga Portugal,2122,defense,581,True
+fbref,Liga Portugal,2122,possession,581,True
+fbref,Liga Portugal,2122,keeper_adv,49,True
+fbref,Liga Portugal,2223,standard,580,True
+fbref,Liga Portugal,2223,shooting,580,True
+fbref,Liga Portugal,2223,playing_time,643,True
+fbref,Liga Portugal,2223,keeper,47,True
+fbref,Liga Portugal,2223,misc,580,True
+fbref,Liga Portugal,2223,passing,580,True
+fbref,Liga Portugal,2223,passing_types,580,True
+fbref,Liga Portugal,2223,gca,580,True
+fbref,Liga Portugal,2223,defense,580,True
+fbref,Liga Portugal,2223,possession,580,True
+fbref,Liga Portugal,2223,keeper_adv,47,True
+fbref,Liga Portugal,2324,standard,536,True
+fbref,Liga Portugal,2324,shooting,536,True
+fbref,Liga Portugal,2324,playing_time,608,True
+fbref,Liga Portugal,2324,keeper,43,True
+fbref,Liga Portugal,2324,misc,536,True
+fbref,Liga Portugal,2324,passing,536,True
+fbref,Liga Portugal,2324,passing_types,536,True
+fbref,Liga Portugal,2324,gca,536,True
+fbref,Liga Portugal,2324,defense,536,True
+fbref,Liga Portugal,2324,possession,536,True
+fbref,Liga Portugal,2324,keeper_adv,43,True
+fbref,Liga Portugal,2425,standard,585,True
+fbref,Liga Portugal,2425,shooting,585,True
+fbref,Liga Portugal,2425,playing_time,661,True
+fbref,Liga Portugal,2425,keeper,44,True
+fbref,Liga Portugal,2425,misc,585,True
+fbref,Liga Portugal,2425,passing,585,True
+fbref,Liga Portugal,2425,passing_types,585,True
+fbref,Liga Portugal,2425,gca,585,True
+fbref,Liga Portugal,2425,defense,585,True
+fbref,Liga Portugal,2425,possession,585,True
+fbref,Liga Portugal,2425,keeper_adv,44,True
+fbref,Belgian Pro League,2122,standard,538,True
+fbref,Belgian Pro League,2122,shooting,538,True
+fbref,Belgian Pro League,2122,playing_time,606,True
+fbref,Belgian Pro League,2122,keeper,37,True
+fbref,Belgian Pro League,2122,misc,538,True
+fbref,Belgian Pro League,2122,passing,538,True
+fbref,Belgian Pro League,2122,passing_types,538,True
+fbref,Belgian Pro League,2122,gca,538,True
+fbref,Belgian Pro League,2122,defense,538,True
+fbref,Belgian Pro League,2122,possession,538,True
+fbref,Belgian Pro League,2122,keeper_adv,37,True
+fbref,Belgian Pro League,2223,standard,540,True
+fbref,Belgian Pro League,2223,shooting,540,True
+fbref,Belgian Pro League,2223,playing_time,611,True
+fbref,Belgian Pro League,2223,keeper,31,True
+fbref,Belgian Pro League,2223,misc,540,True
+fbref,Belgian Pro League,2223,passing,540,True
+fbref,Belgian Pro League,2223,passing_types,540,True
+fbref,Belgian Pro League,2223,gca,540,True
+fbref,Belgian Pro League,2223,defense,540,True
+fbref,Belgian Pro League,2223,possession,540,True
+fbref,Belgian Pro League,2223,keeper_adv,31,True
+fbref,Belgian Pro League,2324,standard,502,True
+fbref,Belgian Pro League,2324,shooting,502,True
+fbref,Belgian Pro League,2324,playing_time,568,True
+fbref,Belgian Pro League,2324,keeper,38,True
+fbref,Belgian Pro League,2324,misc,502,True
+fbref,Belgian Pro League,2324,passing,502,True
+fbref,Belgian Pro League,2324,passing_types,502,True
+fbref,Belgian Pro League,2324,gca,502,True
+fbref,Belgian Pro League,2324,defense,502,True
+fbref,Belgian Pro League,2324,possession,502,True
+fbref,Belgian Pro League,2324,keeper_adv,38,True
+fbref,Belgian Pro League,2425,standard,515,True
+fbref,Belgian Pro League,2425,shooting,515,True
+fbref,Belgian Pro League,2425,playing_time,597,True
+fbref,Belgian Pro League,2425,keeper,42,True
+fbref,Belgian Pro League,2425,misc,515,True
+fbref,Belgian Pro League,2425,passing,515,True
+fbref,Belgian Pro League,2425,passing_types,515,True
+fbref,Belgian Pro League,2425,gca,515,True
+fbref,Belgian Pro League,2425,defense,515,True
+fbref,Belgian Pro League,2425,possession,515,True
+fbref,Belgian Pro League,2425,keeper_adv,42,True
+fbref,Süper Lig,2122,standard,663,True
+fbref,Süper Lig,2122,shooting,663,True
+fbref,Süper Lig,2122,playing_time,764,True
+fbref,Süper Lig,2122,keeper,56,True
+fbref,Süper Lig,2122,misc,663,True
+fbref,Süper Lig,2122,passing,663,True
+fbref,Süper Lig,2122,passing_types,663,True
+fbref,Süper Lig,2122,gca,663,True
+fbref,Süper Lig,2122,defense,663,True
+fbref,Süper Lig,2122,possession,663,True
+fbref,Süper Lig,2122,keeper_adv,56,True
+fbref,Süper Lig,2223,standard,624,True
+fbref,Süper Lig,2223,shooting,624,True
+fbref,Süper Lig,2223,playing_time,741,True
+fbref,Süper Lig,2223,keeper,46,True
+fbref,Süper Lig,2223,misc,624,True
+fbref,Süper Lig,2223,passing,624,True
+fbref,Süper Lig,2223,passing_types,624,True
+fbref,Süper Lig,2223,gca,624,True
+fbref,Süper Lig,2223,defense,624,True
+fbref,Süper Lig,2223,possession,624,True
+fbref,Süper Lig,2223,keeper_adv,46,True
+fbref,Süper Lig,2324,standard,661,True
+fbref,Süper Lig,2324,shooting,661,True
+fbref,Süper Lig,2324,playing_time,794,True
+fbref,Süper Lig,2324,keeper,50,True
+fbref,Süper Lig,2324,misc,661,True
+fbref,Süper Lig,2324,passing,661,True
+fbref,Süper Lig,2324,passing_types,661,True
+fbref,Süper Lig,2324,gca,661,True
+fbref,Süper Lig,2324,defense,661,True
+fbref,Süper Lig,2324,possession,661,True
+fbref,Süper Lig,2324,keeper_adv,50,True
+fbref,Süper Lig,2425,standard,598,True
+fbref,Süper Lig,2425,shooting,598,True
+fbref,Süper Lig,2425,playing_time,726,True
+fbref,Süper Lig,2425,keeper,46,True
+fbref,Süper Lig,2425,misc,598,True
+fbref,Süper Lig,2425,passing,598,True
+fbref,Süper Lig,2425,passing_types,598,True
+fbref,Süper Lig,2425,gca,598,True
+fbref,Süper Lig,2425,defense,598,True
+fbref,Süper Lig,2425,possession,598,True
+fbref,Süper Lig,2425,keeper_adv,46,True
 understat,Premier League,2122,player_season,537,True
 understat,Premier League,2223,player_season,554,True
 understat,Premier League,2324,player_season,570,True
