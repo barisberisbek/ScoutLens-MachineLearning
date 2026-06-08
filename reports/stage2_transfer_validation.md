@@ -14,6 +14,15 @@ Predicted value (from PRE-transfer 2023-24 features) vs the ACTUAL 2024-25 fee. 
 | R² (log space) | 0.429 |
 | log MAE | 0.635 |
 
+## Naive (Transfermarkt MV) vs Pipeline — same transfers
+
+| method | n | Pearson r (€) | r (log) | median ratio |
+|---|---|---|---|---|
+| Naive (copy TM MV) | 271 | 0.861 | 0.806 | 1.00 |
+| **Pipeline (ours)** | 294 | 0.733 | 0.677 | 0.97 |
+
+**Honest finding:** Transfermarkt's market value predicts real transfer fees **better** than our model (r≈0.86 vs 0.74) — unsurprising, since TM aggregates non-statistical information our stat-only model deliberately ignores (reputation, rumours, agents, contracts). Our model is **not** claimed to beat TM at fee prediction. Its r≈0.74 confirms it is a *legitimate independent objective* valuation; its value is **discovery via divergence** — flagging players where the stat-based valuation departs from the market — tested by the Phase-8 §11.5 top-K metric, not by fee correlation. This independence (no MV input, D-02) is exactly what keeps the model from circular self-reference (§2.1).
+
 ## Top-10 OVER-predicted (model ≫ fee)
 
 | player | pos | fee €M | pred €M | ratio |

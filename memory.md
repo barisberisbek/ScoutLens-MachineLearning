@@ -1,7 +1,8 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** **PHASE 6 (STAGE 2 VALUATION) COMPLETE.** 16 models (4 pos × 4 types) → `models/stage2/{POS}/{Model}.pkl` (gitignored). Best per pos: DEF/FWD Stacked (R²0.85/0.875), GK Ridge (0.81), MID MLP (0.85) — all +60–66% vs median baseline. **§11.4 transfer validation: 294 real transfers, median pred/fee ratio 0.97, Pearson r 0.733 (€)** — strong real-world evidence. Phase 1-5 complete. **Next: Phase 7 — Pipeline Assembly + Validation** (`src/pipeline/inference.py` + `confidence.py`; **`feature_forwarder.py` with MANDATORY tests** — age+1, contract−12mo, swap projected stats; 3 validations: Stage1/Stage2/full-pipeline; bonus transfer-fee val already built). `features.parquet` (19,356 × 193) unchanged. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
+- **Current phase:** **PHASE 7 (PIPELINE + 3-LAYER VALIDATION) COMPLETE.** `src/pipeline/` (feature_forwarder, loaders, inference, confidence, validation). Full Stage1→Forwarder→Stage2 inference + CI. **69 tests green.** Phase 1-6 complete. **Next: Phase 8 — Discovery Layer** (`src/discovery/runner.py` + `cross_league_calibration.py`; apply pipeline to lower-4; rank by value_gap × confidence; **§11.5 top-K discovery metric = the REAL validation of the project's value** since fee-corr showed TM≥us). `features.parquet` (19,356 × 193) unchanged.
+- **⚠️ HONEST FINDINGS (Phase 7, user-approved reframe):** (1) Pipeline does NOT beat naive 'copy current MV' on € MAE (5.31 vs 4.15) — because `log_market_value_lag1` is deliberately EXCLUDED (D-02/§2.1 anti-circular) so naive has prior-MV info the model can't use; MV is highly persistent. Forwarder is SOUND (oracle≤pipeline holds). (2) **On real transfer fees, naive (TM MV) BEATS us: r 0.861 vs 0.740.** TM MV is a richer fee predictor (reputation/rumours/agents). Our model is a *legitimate independent objective* valuation (r=0.74 strong), NOT claimed to beat TM. Value = **discovery via divergence** (Phase 8 §11.5), not fee/MV accuracy. This is the §2.1 value-prop, reframed honestly. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
 - **Data inventory:** `data/processed/` → **`unified_panel.parquet` (19,356 rows × 207 cols, one per (player_id, season), 9 leagues × 4 seasons)**. `data/interim/` → kaggle/tm_*/fifa_ratings. `data/raw/` → fbref(396)/understat(20)/transfer_fees(548). **Committed:** `data/external/nationality_map.csv`, `data/manual/{match_log.csv, manual_id_overrides.csv (empty scaffold)}`, `reports/{decisions_log.md, name_resolution_audit.md, coverage_matrix.md}`.
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 2 Sessions 1-3 done (one sitting). Full pipeline in `src/integration/unified_panel_builder.py`: `load_fbref_stats` (11-table collision-safe merge, curated clean names + `<table>__` namespaced tail, hard-error on unexpected dup) → `resolve_backbone` → `split_id_collisions`+`split_minutes_overflow` (namesake guards) → `collapse_split_season` (sum counting / minutes-weighted pct / per-90 recomputed from totals / max-minutes club) → attach xG (Kaggle 24-25 > Understat hist > NaN), MV, contract, FIFA, league-meta → `finalize_panel`. `scripts/build_panel.py` orchestrates; `src/integration/panel_reports.py` writes the 2 reports. **21 tests green** (13 name-resolution + 8 panel-builder). Run scripts via `PYTHONPATH=. .venv/Scripts/python.exe scripts/x.py` (bash env-var syntax; `set PYTHONPATH=` is a no-op in the Bash tool).
@@ -19,7 +20,7 @@
 - [x] Phase 4 — Feature Engineering
 - [x] Phase 5 — Stage 1 Modeling (×4 positions)
 - [x] Phase 6 — Stage 2 Modeling (×4 positions)
-- [ ] Phase 7 — Pipeline Assembly + Validation
+- [x] Phase 7 — Pipeline Assembly + Validation
 - [ ] Phase 8 — Discovery Layer
 - [ ] Phase 9 — Auxiliary Modules (clustering, patterns, SHAP)
 - [ ] Phase 10 — Streamlit Demo
@@ -162,6 +163,24 @@ Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 - **2026-06-08: ROOT CAUSE of the "throttle" = Chrome process LEAK (not an FBref IP block).** When killing the scrape we found **646 chrome.exe + 13 uc_driver** processes leaked. `_fetch_one` creates a NEW `sd.FBref(...)` (→ new seleniumbase browser) PER COMBO and never closes it → ~1 browser leaked per combo → after ~200 combos the machine ran out of RAM/handles → new Chrome launches `Read timed out (localhost)` → soccerdata reports its GENERIC "failed CAPTCHA / IP block" message. The real errors were LOCAL timeouts, not FBref blocking. **FIX before resume:** make the scraper reuse ONE `sd.FBref` reader (or explicitly close the driver per combo), OR resume per-league in separate process runs (each exits and frees its browsers, bounding the leak to ~44). Cleanup: killed the 591 seleniumbase-leak Chrome by CommandLine signature (temp profile / `--window-position=-2400`), preserved the user's ~18 real-browser processes (default `User Data` profile). **RESOLVED:** added `reader._driver.quit()` in `_fetch_one`'s `finally` (`_close_reader`); verified chrome 15→15 after a combo. Resume then completed **396/396 cleanly** — chrome stayed ~15-30 (occasional transient spikes to ~80 that drop back, NOT accumulation), no throttle, combos ~20-45 s. Confirms a local leak, never an FBref IP block.
 
 ## Phase Output Summaries
+
+### Phase 7 — Pipeline Assembly + 3-Layer Validation (2026-06-08/09)
+`src/pipeline/`: **feature_forwarder.py** (deterministic ⭐ — age+1, contract−12mo clip0, lag-shift
+current→lag1, swap position's Stage-1-target stats for projections w/ NaN-fallback, recompute
+composites from forwarded per-90s [z-scores left stale — flagged approximation], season+inflation
+advance, static fields kept), loaders (best models via `feature_names_in_`, lru_cache), inference
+(`predict_player_value` dict + `predict_batch`), confidence (residual-quantile CI), validation
+(3-layer). `scripts/run_pipeline.py` + `validate_pipeline.py`; `tests/test_pipeline.py` (**12;
+69 total green**). Reports: `pipeline_validation.md`, `pipeline_e2e_examples.md`; updated
+`stage2_transfer_validation.md` (naive comparison). `models/pipeline_residual_quantiles.pkl` +
+`data/processed/pipeline_e2e_predictions.parquet` gitignored.
+**Layer-3 (1678-player cohort, 2023-24→2024-25):** pipeline MAE €5.31M vs oracle €4.85M vs naive
+€4.15M. Forwarder SOUND (oracle≤pipeline). Pipeline < naive on MAE — EXPECTED (lag1 excluded;
+oracle≈naive in R²_log 0.87). **CI recalibrated** from pipeline end-to-end residuals (not Stage-2
+train): 95%→**90%** coverage, 50%→50% (was 71% undercovering). **§11.4 honest naive comparison:**
+naive(TM MV) r=0.861 > pipeline 0.740 — TM MV predicts fees better; our value-prop reframed to
+independence + discovery-divergence (NOT 'beat TM'). **D-02/§2.1: lag1 stays EXCLUDED.**
+Phase-8 §11.5 top-K is the real value test.
 
 ### Phase 6 — Stage 2 Market-Value Valuation (2026-06-08)
 `src/models/stage2/` (data_loader [single-row, MV-observed+min-minutes, target log_market_value],
