@@ -37,6 +37,19 @@ minutes (physically impossible for one player) is split, max-minutes stint keeps
 others → club-salted synthetic. Re-assigned players are kept + flagged `synthetic_split`
 (prime manual-override candidates for Session 3), never dropped or wrongly summed.
 
+### P2-D6 (2026-06-08) — Drop FBref extended stats (soccerdata gap) + revise §6.2
+**Context:** Phase 3 EDA found that soccerdata never delivered most FBref *extended* stats —
+tackles(total)/blocks/clearances/passes/key_passes/touches/carries/SCA/GCA/PSxG are empty at
+source in the cached HTML across all 36 league-seasons (verified: `data-stat="tackles"`=0
+numeric in HTML, while `tackles_won`/`interceptions`=580 in both HTML and parquet). Not a
+parse bug; unrecoverable without an alternative source. Aerials never existed at all.
+**Decision:** (1) `finalize_panel` drops all-null FBref stat columns → panel 207→101 cols.
+(2) `PROJECT_ROADMAP.md` §6.2 Stage-1 targets revised to the surviving stat universe
+(`tackles_won`/`interceptions` replace total-tackles/blocks/aerials; psxg/SCA/prog dropped),
+final selection in Phase 5. **Rationale:** keeping 106 all-null columns only breeds NaN
+confusion; the revised targets are the honest modelable set. (User-approved pivot, no
+re-scrape — soccerdata limitation, not fixable at parse level.)
+
 ### P2-D5 (2026-06-08) — Known soccerdata gaps left as NaN (no fabrication)
 **Context:** soccerdata's FBref tables carry no xG/npxG/xAG, no progression COUNTS
 (PrgP/PrgC), no aerial-duel columns, and `keeper_adv` Expected-family (PSxG) is null.

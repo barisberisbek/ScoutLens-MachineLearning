@@ -322,13 +322,28 @@ Multi-output regression on a per-position-tuned vector of stats.
 
 ### 6.2 Position-specific targets
 
-**GK:** `saves_per_90`, `save_pct`, `clean_sheets_per_90`, `goals_against_per_90`, `psxg_per_90`
+> **REVISED 2026-06-08 (Phase 3 EDA finding).** The original target lists below assumed
+> FBref extended stats (tackles total, blocks, aerials, progressive passes/carries, key
+> passes, SCA/GCA, PSxG). EDA proved **soccerdata never delivered these columns** — they
+> are empty at source in the cached HTML across all 36 league-seasons (not a parse bug,
+> unrecoverable without an alternative source). Only `tackles_won`, `interceptions`, and
+> the native scoring/shooting/keeper stats survived. Targets are therefore reduced to the
+> available stat universe + xG/xAG (Kaggle 2024-25 top-5, Understat historical top-5).
+> Final selection is locked in Phase 5. See `reports/decisions_log.md` P2-D6.
 
-**DEF:** `tackles_per_90`, `interceptions_per_90`, `blocks_per_90`, `aerial_won_pct`, `progressive_passes_per_90`, `goals_per_90`
+**Revised realistic targets (Phase-5 to finalize):**
 
-**MID:** `xg_per_90`, `xag_per_90`, `progressive_passes_per_90`, `progressive_carries_per_90`, `key_passes_per_90`, `tackles_per_90`
+- **GK:** `saves_per_90`, `save_pct`, `clean_sheets_per_90`, `goals_against_per_90` *(psxg unavailable)*
+- **DEF:** `tackles_won_per_90`, `interceptions_per_90`, `goals_per_90` *(total tackles/blocks/aerials/prog-passes unavailable)*
+- **MID:** `goals_per_90`, `assists_per_90`, `xg_per_90`, `xag_per_90`, `tackles_won_per_90`, `interceptions_per_90` *(key passes/prog-carries/SCA unavailable)*
+- **FWD:** `xg_per_90`, `goals_per_90`, `assists_per_90`, `shots_per_90`, `npxg_per_90` / `understat_xa_per_90` *(SCA/prog-carries unavailable)*
 
-**FWD:** `xg_per_90`, `goals_per_90`, `xag_per_90`, `shots_per_90`, `progressive_carries_per_90`, `sca_per_90`
+**Original targets (superseded — kept for record):**
+
+- ~~GK: `saves_per_90`, `save_pct`, `clean_sheets_per_90`, `goals_against_per_90`, `psxg_per_90`~~
+- ~~DEF: `tackles_per_90`, `interceptions_per_90`, `blocks_per_90`, `aerial_won_pct`, `progressive_passes_per_90`, `goals_per_90`~~
+- ~~MID: `xg_per_90`, `xag_per_90`, `progressive_passes_per_90`, `progressive_carries_per_90`, `key_passes_per_90`, `tackles_per_90`~~
+- ~~FWD: `xg_per_90`, `goals_per_90`, `xag_per_90`, `shots_per_90`, `progressive_carries_per_90`, `sca_per_90`~~
 
 ### 6.3 Training data construction
 

@@ -1,7 +1,7 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** **PHASE 2 COMPLETE.** Unified panel built end-to-end. Phase 1 complete (1A–1F). **Next: Phase 3 — EDA** (`notebooks/01_data_exploration.ipynb`; notebooks = narrative+viz only). Optional Session-3 follow-up: populate `data/manual/manual_id_overrides.csv` from top-500-MV unmatched/`synthetic_split` cases in the audit, then re-run `build_panel.py`.
+- **Current phase:** **PHASE 3 (EDA) COMPLETE.** Unified panel explored; soccerdata extended-stat gap caught + handled (panel 207→101 cols, §6.2 revised). Phase 1-2 complete. **Next: Phase 4 — Feature Engineering** (`src/features/`, one transform per file; `feature_forwarder.py` tests MANDATORY; per-90s/z-scores/age-curve/trajectory; honor reduced §6.2 targets + position-conditional missingness). Optional: populate `manual_id_overrides.csv` from top-500-MV synthetics (deferred).
 - **Data inventory:** `data/processed/` → **`unified_panel.parquet` (19,356 rows × 207 cols, one per (player_id, season), 9 leagues × 4 seasons)**. `data/interim/` → kaggle/tm_*/fifa_ratings. `data/raw/` → fbref(396)/understat(20)/transfer_fees(548). **Committed:** `data/external/nationality_map.csv`, `data/manual/{match_log.csv, manual_id_overrides.csv (empty scaffold)}`, `reports/{decisions_log.md, name_resolution_audit.md, coverage_matrix.md}`.
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 2 Sessions 1-3 done (one sitting). Full pipeline in `src/integration/unified_panel_builder.py`: `load_fbref_stats` (11-table collision-safe merge, curated clean names + `<table>__` namespaced tail, hard-error on unexpected dup) → `resolve_backbone` → `split_id_collisions`+`split_minutes_overflow` (namesake guards) → `collapse_split_season` (sum counting / minutes-weighted pct / per-90 recomputed from totals / max-minutes club) → attach xG (Kaggle 24-25 > Understat hist > NaN), MV, contract, FIFA, league-meta → `finalize_panel`. `scripts/build_panel.py` orchestrates; `src/integration/panel_reports.py` writes the 2 reports. **21 tests green** (13 name-resolution + 8 panel-builder). Run scripts via `PYTHONPATH=. .venv/Scripts/python.exe scripts/x.py` (bash env-var syntax; `set PYTHONPATH=` is a no-op in the Bash tool).
@@ -15,7 +15,7 @@
 - [x] Phase 1E — FIFA ratings loader
 - [x] Phase 1F — External lookup CSVs (UEFA, continent, etc.)  ← done early in Phase 0
 - [x] Phase 2 — Data Integration
-- [ ] Phase 3 — EDA
+- [x] Phase 3 — EDA
 - [ ] Phase 4 — Feature Engineering
 - [ ] Phase 5 — Stage 1 Modeling (×4 positions)
 - [ ] Phase 6 — Stage 2 Modeling (×4 positions)
@@ -32,6 +32,58 @@ Full entries in `reports/decisions_log.md`. Phase 2 (all user-approved 2026-06-0
 - **P2-D3** `xag` (FBref/Kaggle) and `understat_xa` (Understat) = SEPARATE columns; coalesce deferred to Phase 4 (may build position-based `understat_xa→xag` factor).
 
 ## Open Questions / Issues
+
+### ✅ RESOLVED via pivot (found in Phase 3 EDA, 2026-06-08) — FBref EXTENDED stats empty
+**Decision: pivot (no re-scrape).** Diagnostic confirmed soccerdata limitation (cached HTML
+source-empty for these cols; `data-stat="tackles"`=0 numeric while `tackles_won`/`interceptions`
+=580, both in HTML & parquet → our parser is correct, the data was never delivered).
+**Action taken:** `finalize_panel` now drops all-null FBref stat columns → panel **207→101 cols**
+(106 dropped); §6.2 targets revised (below + roadmap); EDA resumes on the clean panel.
+EDA on `unified_panel.parquet` revealed that
+~80 of the 146 clean stat columns are **100% null across all 36 league-seasons** — and
+this is a **Phase 1B scrape defect, not a Phase 2 bug**. The defect:
+- **Native** FBref tables (standard, shooting, keeper, misc, playing_time) = fully populated ✓.
+- **Extended** tables (defense, passing, passing_types, possession, gca, keeper_adv) = only
+  2-3 columns each survived; the rest are null. Survivors are erratic: defense kept only
+  `90s, Tackles_TklW, Int`; passing kept only `90s, Ast`; possession 1/21; gca 1/17.
+- **Root cause:** the cached raw HTML (`~/soccerdata/data/FBref/*.html`, 408 files) itself
+  lacks the values — `data-stat="tackles"/"blocks"/"clearances"/"challenge_tackles"` are
+  EMPTY in the player table, while `tackles_won`/`interceptions` (same rows) are full. So
+  **NOT recoverable by re-parsing cache.** This is the same soccerdata FBref limitation that
+  already dropped xG/npxG/xAG/progression-counts — but WIDER than realized (also tackles,
+  passes_completed, key_passes, touches, carries, SCA/GCA, PSxG). Phase 1B's coverage
+  validator only checked file/row presence; the cross-val only checked native stats
+  (goals/assists/minutes/shots Pearson 1.000) → the gap went undetected.
+- **Impact on §6.2 Stage-1 targets (SEVERE):** DEAD = tackles_per_90 (DEF/MID), blocks_per_90
+  (DEF), key_passes_per_90 (MID), progressive_carries_per_90 (MID/FWD), sca_per_90 (FWD),
+  psxg_per_90 (GK). SURVIVING = goals, assists, shots, interceptions, saves, save_pct,
+  clean_sheets, goals_against, xg/xag(top-5 from Kaggle/Understat).
+- **Decisive next step (proposed):** a 1-combo diagnostic spike — fetch ONE FBref defense
+  page FRESH (live, not cache) and check whether `data-stat="tackles"` is populated. If YES
+  → cache is stale/buggy, re-scrape the 6 extended types (cache miss → network, but no
+  parser issue). If NO → genuine soccerdata/FBref-view limitation → fall back to Kaggle
+  (full FBref stats but only 2024-25 top-5) + reduce §6.2 target lists to available stats.
+- **Mitigation anchor:** Kaggle 2024-25 top-5 (158 cols) DOES carry the full stat set
+  (confirmed Phase 1A) — usable if a single-season full-stat feature is ever needed.
+- **61 of 167 perf cols survived.** Key survivors: goals, assists, shots, shots_on_target,
+  `tackles_won`, `interceptions`, saves, save_pct, clean_sheets, goals_against, fouls,
+  crosses, cards, team-context (on_off/plus_minus/ppm), + xg/xag/npxg/understat_xa (top-5).
+  Dead: total tackles, blocks, clearances, aerials (none exist), passes_*, key_passes,
+  touches, carries, take_ons, SCA/GCA, PSxG, prog-passes/carries.
+
+### Phase 5 Stage-1 REDUCED targets (revised §6.2, finalize in Phase 5)
+Soccerdata gap forced a §6.2 revision (roadmap updated, P2-D6). Candidate targets:
+- **GK:** saves_per_90, save_pct, clean_sheets_per_90, goals_against_per_90.
+- **DEF:** tackles_won_per_90, interceptions_per_90, goals_per_90.
+- **MID:** goals_per_90, assists_per_90, xg_per_90, xag_per_90, tackles_won_per_90, interceptions_per_90.
+- **FWD:** xg_per_90, goals_per_90, assists_per_90, shots_per_90, npxg/understat_xa.
+NOTE: aerials do NOT exist in our data (user's draft `aerial_won_per_90` for DEF dropped →
+replaced by `tackles_won`+`interceptions`, which survived).
+
+### Phase 5 GK target alternatives (psxg unavailable)
+Decide in Phase 5: `clean_sheets_per_90` (primary), `save_pct` (secondary),
+`goals_against_per_90` (negative direction); custom composite deferred (no shots-faced/box
+data). psxg_per_90 from §6.2 is permanently unavailable (soccerdata gap).
 
 ### Phase 2 carry-forward limitations (for Phase 3/4)
 - **Known soccerdata data gaps (NaN in panel, fill in Phase 4):** no xG/npxG/xAG, no progression COUNTS (PrgP/PrgC), no aerial-duel cols, no PSxG (keeper_adv Expected-family null). xG filled from Kaggle (2024-25 top5) + Understat (hist top5) only → **lower-4 + many historical rows have NaN xG**; **psxg/aerials/PrgP only exist for Kaggle 2024-25 top5**. §6.2 GK target `psxg_per_90` and DEF target `aerial_won_pct`/`progressive_passes_per_90` are largely unavailable from FBref — Phase 4 must proxy (the `understat_xa→xag` position factor is one such planned proxy, P2-D3).
@@ -86,6 +138,19 @@ Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 - **2026-06-08: ROOT CAUSE of the "throttle" = Chrome process LEAK (not an FBref IP block).** When killing the scrape we found **646 chrome.exe + 13 uc_driver** processes leaked. `_fetch_one` creates a NEW `sd.FBref(...)` (→ new seleniumbase browser) PER COMBO and never closes it → ~1 browser leaked per combo → after ~200 combos the machine ran out of RAM/handles → new Chrome launches `Read timed out (localhost)` → soccerdata reports its GENERIC "failed CAPTCHA / IP block" message. The real errors were LOCAL timeouts, not FBref blocking. **FIX before resume:** make the scraper reuse ONE `sd.FBref` reader (or explicitly close the driver per combo), OR resume per-league in separate process runs (each exits and frees its browsers, bounding the leak to ~44). Cleanup: killed the 591 seleniumbase-leak Chrome by CommandLine signature (temp profile / `--window-position=-2400`), preserved the user's ~18 real-browser processes (default `User Data` profile). **RESOLVED:** added `reader._driver.quit()` in `_fetch_one`'s `finally` (`_close_reader`); verified chrome 15→15 after a combo. Resume then completed **396/396 cleanly** — chrome stayed ~15-30 (occasional transient spikes to ~80 that drop back, NOT accumulation), no throttle, combos ~20-45 s. Confirms a local leak, never an FBref IP block.
 
 ## Phase Output Summaries
+
+### Phase 3 — EDA (2026-06-08)
+`notebooks/01_data_exploration.ipynb` (10 sections, executed, outputs embedded, 3.6 MB) +
+`reports/figures/*.png` (16) + `reports/eda_findings.md`. Logic in **`src/eda/`** (`style.py`,
+`summary.py` pure-pandas, `plots.py` 16 figure fns); notebook is thin (path-bootstrap +
+`src.eda` calls + rich closing notes). Generator: `scripts/build_eda_notebook.py` (nbformat).
+**Biggest outcome = caught the soccerdata extended-stat gap** (see RESOLVED note above): panel
+207→101 cols, §6.2 revised. Other confirmations: log-target justified (skew 4.2→−0.03, Shapiro
+0.99); YoY inflation +10→+20%; league premium 3.8×–18.8×; MV median MID>DEF≈FWD>GK (FWD mean
+highest via tail); GK peak-age ~30 vs outfield ~25; xG r=0.93 (Understat resid −0.14 vs Kaggle
+−0.02); 11.2% position-changers; 82% TM-matched. Added `scipy`+`statsmodels` to requirements.
+Tests still 21 green (src/eda has no behavior tests; pure viz). Run notebook:
+`python -m nbconvert --execute --to notebook --inplace notebooks/01_data_exploration.ipynb`.
 
 ### Phase 2 Sessions 2-3 — Unified panel build (2026-06-08)
 Delivered `data/processed/unified_panel.parquet` (**19,356 rows × 207 cols**, 1 per (player_id, season), 9 leagues × 4 seasons, 9,072 players). Pipeline in `unified_panel_builder.py`: **(1)** `load_fbref_stats` merges the 11 FBref stat tables per league-season — strips `<Section>_<Short>` prefixes, applies a curated per-table clean-name map (`FBREF_TABLE_STAT_RENAME` in constants, 186 clean cols) and namespaces the long tail as `<table>__<col>` (21 cols); NaN-safe composite merge key incl. `born` (disambiguates same-name-same-club, e.g. two "João Mendes"); drops expected dups (`FBREF_DROP_DUP_COLS`); **hard-errors on any unexpected dup column** (no silent overwrite). **(2)** resolve → player_id. **(3)** namesake guards: `split_id_collisions` (mononym magnet, e.g. TM "Gabriel"=Magalhães scored 100 vs every "Gabriel X" under token_set_ratio → 31 ids/65 rows re-iD'd) + `split_minutes_overflow` (>3,800 min/season = 2 same-name players, 2 rows split). **(4)** `collapse_split_season` (2,401 stints→1,200 players): sum counting, minutes-weighted pct, per-90 **recomputed from summed totals**, max-minutes club (D-15). **(5)** attach xG (Kaggle 2024-25 top5 `xg/xag/npxg` matched via name+year incl. initials for short FIFA-style names; Understat hist top5 matched by season+club then club-independent season+name fallback → **orphans 20.6%→2.4%**), MV (`tm_player_seasons`), contract (`contract_remaining_months` clip0 + `has_contract_date`), FIFA (overall/potential, FC25 potential null), league meta via `competition_id`. **(6)** `finalize_panel`: `nationality`(full)+`continent_group`, `age_at_season_end`+`age_precision` (exact 15.9k / year_only 3.5k), `log_market_value`, §5.3 schema order. Coverage: MV 69%, xG 55% (top5), FIFA 80%. Reports `name_resolution_audit.md` + `coverage_matrix.md`. **+8 panel-builder tests** (collapse sum/wavg/per90/max-club, both namesake guards) → 21 total green.

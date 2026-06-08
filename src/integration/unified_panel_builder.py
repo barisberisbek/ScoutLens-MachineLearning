@@ -624,6 +624,13 @@ def finalize_panel(panel: pd.DataFrame, resolver: PlayerIDResolver) -> pd.DataFr
                  and c not in {"nation", "born", "age", "date_of_birth",
                                "contract_expiration_date", "has_international_caps",
                                "current_club_name", "player_name"}]
+    # Drop FBref stat columns soccerdata never delivered (100% null across the panel):
+    # the extended-table gap — tackles/passing/possession/creation/PSxG. Keeping them
+    # only breeds NaN confusion (see decisions_log P2-D6 / memory BLOCKER note).
+    empty = [c for c in stat_tail if panel[c].isna().all()]
+    if empty:
+        logger.info("Dropped %d all-null FBref stat columns (soccerdata extended-stat gap)", len(empty))
+        stat_tail = [c for c in stat_tail if c not in empty]
     panel = panel[leading + stat_tail]
 
     assert panel.duplicated(["player_id", "season"]).sum() == 0, "duplicate (player_id, season)"
