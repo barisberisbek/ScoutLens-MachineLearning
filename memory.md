@@ -1,7 +1,7 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** **PHASE 4 (FEATURE ENGINEERING) COMPLETE + reviewed.** `data/processed/features.parquet` (**19,356 × 193, +92 features**; xag lag cols dropped). Phase 1-3 complete. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
+- **Current phase:** **PHASE 5 (STAGE 1 PROJECTION) COMPLETE.** 76 models trained (4 pos × 19 targets × 4 model types: Ridge/XGBoost-CPU/MLP/Stacked) → `models/stage1/{POS}/{target}_{Model}.pkl` (gitignored). All 19 best-per-target models beat the naive baseline (+2–25%, median ~15%). Phase 1-4 complete. **Next: Phase 6 — Stage 2 Valuation** (`src/models/stage2/`, per-position; target `log_market_value`; trained on ACTUAL observed stats NOT Stage-1 projections; + `feature_forwarder.py` MANDATORY tests for Phase 7 inference). `features.parquet` (19,356 × 193) unchanged. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
 - **Data inventory:** `data/processed/` → **`unified_panel.parquet` (19,356 rows × 207 cols, one per (player_id, season), 9 leagues × 4 seasons)**. `data/interim/` → kaggle/tm_*/fifa_ratings. `data/raw/` → fbref(396)/understat(20)/transfer_fees(548). **Committed:** `data/external/nationality_map.csv`, `data/manual/{match_log.csv, manual_id_overrides.csv (empty scaffold)}`, `reports/{decisions_log.md, name_resolution_audit.md, coverage_matrix.md}`.
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 2 Sessions 1-3 done (one sitting). Full pipeline in `src/integration/unified_panel_builder.py`: `load_fbref_stats` (11-table collision-safe merge, curated clean names + `<table>__` namespaced tail, hard-error on unexpected dup) → `resolve_backbone` → `split_id_collisions`+`split_minutes_overflow` (namesake guards) → `collapse_split_season` (sum counting / minutes-weighted pct / per-90 recomputed from totals / max-minutes club) → attach xG (Kaggle 24-25 > Understat hist > NaN), MV, contract, FIFA, league-meta → `finalize_panel`. `scripts/build_panel.py` orchestrates; `src/integration/panel_reports.py` writes the 2 reports. **21 tests green** (13 name-resolution + 8 panel-builder). Run scripts via `PYTHONPATH=. .venv/Scripts/python.exe scripts/x.py` (bash env-var syntax; `set PYTHONPATH=` is a no-op in the Bash tool).
@@ -17,7 +17,7 @@
 - [x] Phase 2 — Data Integration
 - [x] Phase 3 — EDA
 - [x] Phase 4 — Feature Engineering
-- [ ] Phase 5 — Stage 1 Modeling (×4 positions)
+- [x] Phase 5 — Stage 1 Modeling (×4 positions)
 - [ ] Phase 6 — Stage 2 Modeling (×4 positions)
 - [ ] Phase 7 — Pipeline Assembly + Validation
 - [ ] Phase 8 — Discovery Layer
@@ -162,6 +162,24 @@ Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 - **2026-06-08: ROOT CAUSE of the "throttle" = Chrome process LEAK (not an FBref IP block).** When killing the scrape we found **646 chrome.exe + 13 uc_driver** processes leaked. `_fetch_one` creates a NEW `sd.FBref(...)` (→ new seleniumbase browser) PER COMBO and never closes it → ~1 browser leaked per combo → after ~200 combos the machine ran out of RAM/handles → new Chrome launches `Read timed out (localhost)` → soccerdata reports its GENERIC "failed CAPTCHA / IP block" message. The real errors were LOCAL timeouts, not FBref blocking. **FIX before resume:** make the scraper reuse ONE `sd.FBref` reader (or explicitly close the driver per combo), OR resume per-league in separate process runs (each exits and frees its browsers, bounding the leak to ~44). Cleanup: killed the 591 seleniumbase-leak Chrome by CommandLine signature (temp profile / `--window-position=-2400`), preserved the user's ~18 real-browser processes (default `User Data` profile). **RESOLVED:** added `reader._driver.quit()` in `_fetch_one`'s `finally` (`_close_reader`); verified chrome 15→15 after a combo. Resume then completed **396/396 cleanly** — chrome stayed ~15-30 (occasional transient spikes to ~80 that drop back, NOT accumulation), no throttle, combos ~20-45 s. Confirms a local leak, never an FBref IP block.
 
 ## Phase Output Summaries
+
+### Phase 5 — Stage 1 Performance Projection (2026-06-08)
+`src/models/stage1/` (target_specs, data_loader, models, ensemble, persist, evaluate, train) +
+`scripts/train_stage1.py`/`evaluate_stage1.py` + `tests/test_stage1.py` (**11 tests; 45 total green**).
+**Compute = CPU** (benchmarked 2× faster than the GTX 1650 GPU at 6K-pair scale; decisions logged).
+**Pairs** (same player, consecutive seasons, same position, min-minutes both): GK 325/159, DEF
+1510/717, MID 1785/936, FWD 621/258 (train/val) — below the original rough estimates but accepted
+(D-01 min-minutes preserved). **141 features** (163 for GK; market-value + next_* + metadata
+excluded → leakage-safe; current-season stat IS a feature). **19 targets** (MID xag→understat_xa).
+4 models each (Ridge/XGBoost[device=cpu,hist]/MLP[early_stopping]/Stacked) via GridSearchCV;
+joblib → `models/stage1/`. **Results (val 2024-25):** all 19 best-per-target models beat naive
+'next==current' (+2.1% to +25.0%, median ~+15%); R² 0.0–0.55 (MID xg 0.55 highest, **no R²>0.85 →
+no leakage**); **but 28/76 individual fits are WORSE than naive** (mostly MLP on noisy/small targets
+— naive is a strong baseline for mean-reverting stats; selection picks the winner). GK flagged
+higher-variance (n=325). Reports: `reports/stage1_metrics.md` (best-per-target + all-models Δ% vs
+baseline), `stage1_feature_importance.md` (top-20/target; current-season same-stat dominates =
+autoregressive signal, expected). `data/processed/stage1_val_predictions.parquet` (8,786 best-model
+projections, gitignored). Stage-2 will use ACTUAL stats, NOT these projections (D-02).
 
 ### Phase 4 — Feature Engineering (2026-06-08)
 `data/processed/features.parquet` (**19,356 × 193, +92 features** — final after dropping the
