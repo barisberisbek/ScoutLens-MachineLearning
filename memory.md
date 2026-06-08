@@ -85,6 +85,30 @@ Decide in Phase 5: `clean_sheets_per_90` (primary), `save_pct` (secondary),
 `goals_against_per_90` (negative direction); custom composite deferred (no shots-faced/box
 data). psxg_per_90 from §6.2 is permanently unavailable (soccerdata gap).
 
+### Phase 4 — feature-engineering flags (user-specified, 2026-06-08)
+Architecture: one transform per file under `src/features/`; `build_features.py` orchestrates;
+`feature_forwarder.py` unit tests MANDATORY; update `reports/feature_dictionary.md` per feature.
+1. **Per-90 recomputation:** generalize the Phase-2 split-season per-90 recompute. Review
+   `PER_90_STATS` (constants) — add `xag`, `understat_xa` (and use only SURVIVING stats:
+   goals, assists, shots, shots_on_target, tackles_won, interceptions, saves, goals_against).
+2. **Position-conditional z-scores:** compute per (primary_position) — Fig05 (median
+   MID>DEF≈FWD>GK) proves a global z-score mis-scales positions. Critical for Stage 1/2.
+3. **Age-curve features (position-specific):** `age`, `age_squared`, `distance_from_peak`
+   (peaks: GK~30, outfield~25-26 from Fig10), `is_young(<24)` / `is_peak(24-29)` / `is_declining(>29)`.
+4. **Lag/trajectory features** (Fig11 motivated): per key stat `season_minus_1` lag +
+   deltas `delta_xg_per_90`, `delta_goals_per_90`, `delta_minutes_played` (momentum). Needs ≥2
+   consecutive seasons (§6.3 pair rule).
+5. **Composite scores (SURVIVING stats only):** `goal_threat = xg_per_90 + 0.5*shots_per_90`;
+   `defensive_actions = tackles_won_per_90 + interceptions_per_90`;
+   `creative_threat = xag_per_90 (+ understat_xa_per_90)` — **NOTE: key_passes is DROPPED
+   (soccerdata gap), so the creative composite uses xag/understat_xa only; NO aerial composite
+   (no data); NO progressive composite (PrgP/PrgC dropped).**
+6. **League multiplier feature:** use `league_value_multiplier` (already in panel from
+   tm_competitions) + the Fig04 premium ratios — a main Stage-2 driver.
+7. **Year-inflation feature (D-07):** encode the Fig03 YoY % (+10→+20%) as a multiplier feature.
+8. **meets_min_minutes:** keep as a feature/flag; physical filtering happens at Stage-1/2
+   modeling entry, NOT in features (§6.3 / P2-D1).
+
 ### Phase 2 carry-forward limitations (for Phase 3/4)
 - **Known soccerdata data gaps (NaN in panel, fill in Phase 4):** no xG/npxG/xAG, no progression COUNTS (PrgP/PrgC), no aerial-duel cols, no PSxG (keeper_adv Expected-family null). xG filled from Kaggle (2024-25 top5) + Understat (hist top5) only → **lower-4 + many historical rows have NaN xG**; **psxg/aerials/PrgP only exist for Kaggle 2024-25 top5**. §6.2 GK target `psxg_per_90` and DEF target `aerial_won_pct`/`progressive_passes_per_90` are largely unavailable from FBref — Phase 4 must proxy (the `understat_xa→xag` position factor is one such planned proxy, P2-D3).
 - **`is_loan` is a `False` placeholder** (D-15 loan detection deferred — TM snapshot lacks clean loan status).
