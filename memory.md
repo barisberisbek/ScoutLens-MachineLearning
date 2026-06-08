@@ -1,7 +1,7 @@
 # Project Memory — AML Final Project
 
 ## Current State
-- **Current phase:** **PHASE 5 (STAGE 1 PROJECTION) COMPLETE.** 76 models trained (4 pos × 19 targets × 4 model types: Ridge/XGBoost-CPU/MLP/Stacked) → `models/stage1/{POS}/{target}_{Model}.pkl` (gitignored). All 19 best-per-target models beat the naive baseline (+2–25%, median ~15%). Phase 1-4 complete. **Next: Phase 6 — Stage 2 Valuation** (`src/models/stage2/`, per-position; target `log_market_value`; trained on ACTUAL observed stats NOT Stage-1 projections; + `feature_forwarder.py` MANDATORY tests for Phase 7 inference). `features.parquet` (19,356 × 193) unchanged. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
+- **Current phase:** **PHASE 6 (STAGE 2 VALUATION) COMPLETE.** 16 models (4 pos × 4 types) → `models/stage2/{POS}/{Model}.pkl` (gitignored). Best per pos: DEF/FWD Stacked (R²0.85/0.875), GK Ridge (0.81), MID MLP (0.85) — all +60–66% vs median baseline. **§11.4 transfer validation: 294 real transfers, median pred/fee ratio 0.97, Pearson r 0.733 (€)** — strong real-world evidence. Phase 1-5 complete. **Next: Phase 7 — Pipeline Assembly + Validation** (`src/pipeline/inference.py` + `confidence.py`; **`feature_forwarder.py` with MANDATORY tests** — age+1, contract−12mo, swap projected stats; 3 validations: Stage1/Stage2/full-pipeline; bonus transfer-fee val already built). `features.parquet` (19,356 × 193) unchanged. **Next: Phase 5 — Stage 1 (Projection)** (per-position GK/DEF/MID/FWD models; reduced §6.2 targets; TimeSeriesSplit; `feature_forwarder.py` + MANDATORY tests; OOF target-encoding deferred from Phase 4 lives here). Optional: populate `manual_id_overrides.csv` (deferred).
 - **Data inventory:** `data/processed/` → **`unified_panel.parquet` (19,356 rows × 207 cols, one per (player_id, season), 9 leagues × 4 seasons)**. `data/interim/` → kaggle/tm_*/fifa_ratings. `data/raw/` → fbref(396)/understat(20)/transfer_fees(548). **Committed:** `data/external/nationality_map.csv`, `data/manual/{match_log.csv, manual_id_overrides.csv (empty scaffold)}`, `reports/{decisions_log.md, name_resolution_audit.md, coverage_matrix.md}`.
 - **Last updated:** 2026-06-08
 - **Last session summary:** Phase 2 Sessions 1-3 done (one sitting). Full pipeline in `src/integration/unified_panel_builder.py`: `load_fbref_stats` (11-table collision-safe merge, curated clean names + `<table>__` namespaced tail, hard-error on unexpected dup) → `resolve_backbone` → `split_id_collisions`+`split_minutes_overflow` (namesake guards) → `collapse_split_season` (sum counting / minutes-weighted pct / per-90 recomputed from totals / max-minutes club) → attach xG (Kaggle 24-25 > Understat hist > NaN), MV, contract, FIFA, league-meta → `finalize_panel`. `scripts/build_panel.py` orchestrates; `src/integration/panel_reports.py` writes the 2 reports. **21 tests green** (13 name-resolution + 8 panel-builder). Run scripts via `PYTHONPATH=. .venv/Scripts/python.exe scripts/x.py` (bash env-var syntax; `set PYTHONPATH=` is a no-op in the Bash tool).
@@ -18,7 +18,7 @@
 - [x] Phase 3 — EDA
 - [x] Phase 4 — Feature Engineering
 - [x] Phase 5 — Stage 1 Modeling (×4 positions)
-- [ ] Phase 6 — Stage 2 Modeling (×4 positions)
+- [x] Phase 6 — Stage 2 Modeling (×4 positions)
 - [ ] Phase 7 — Pipeline Assembly + Validation
 - [ ] Phase 8 — Discovery Layer
 - [ ] Phase 9 — Auxiliary Modules (clustering, patterns, SHAP)
@@ -162,6 +162,24 @@ Phase 5 ve 6 başlayınca model performans metrikleri burada raporlanacak.
 - **2026-06-08: ROOT CAUSE of the "throttle" = Chrome process LEAK (not an FBref IP block).** When killing the scrape we found **646 chrome.exe + 13 uc_driver** processes leaked. `_fetch_one` creates a NEW `sd.FBref(...)` (→ new seleniumbase browser) PER COMBO and never closes it → ~1 browser leaked per combo → after ~200 combos the machine ran out of RAM/handles → new Chrome launches `Read timed out (localhost)` → soccerdata reports its GENERIC "failed CAPTCHA / IP block" message. The real errors were LOCAL timeouts, not FBref blocking. **FIX before resume:** make the scraper reuse ONE `sd.FBref` reader (or explicitly close the driver per combo), OR resume per-league in separate process runs (each exits and frees its browsers, bounding the leak to ~44). Cleanup: killed the 591 seleniumbase-leak Chrome by CommandLine signature (temp profile / `--window-position=-2400`), preserved the user's ~18 real-browser processes (default `User Data` profile). **RESOLVED:** added `reader._driver.quit()` in `_fetch_one`'s `finally` (`_close_reader`); verified chrome 15→15 after a combo. Resume then completed **396/396 cleanly** — chrome stayed ~15-30 (occasional transient spikes to ~80 that drop back, NOT accumulation), no throttle, combos ~20-45 s. Confirms a local leak, never an FBref IP block.
 
 ## Phase Output Summaries
+
+### Phase 6 — Stage 2 Market-Value Valuation (2026-06-08)
+`src/models/stage2/` (data_loader [single-row, MV-observed+min-minutes, target log_market_value],
+models [reuse Ridge/XGBoost + **tightened MLP** alpha 0.1/1/10], ensemble, persist, evaluate
+[log + €-space], train, **transfer_validation §11.4**) + `scripts/train_stage2.py`/`evaluate_stage2.py`
++ `tests/test_stage2.py` (**12; 57 total green**). **D-02 honored:** trained on ACTUAL stats, NOT
+Stage-1 projections. **Dataset:** 8234 train (21-22/22-23/23-24) / 2228 val (24-25); per-pos train
+GK637/DEF2805/MID3515/FWD1277. **141 features** (163 GK) — ALL market-value cols excluded incl
+`log_market_value_lag1` (start-excluded to avoid 'copy last year'; ablation deferred). **Results
+(val 2024-25):** best per pos = DEF/FWD Stacked (R² .846/.875), GK Ridge (.814), MID MLP (.850);
+all +60–66% vs median baseline; MAE €2.6–4.6M; **max R² 0.875 <0.90 → no leakage** (FIFA rating +
+league/year anchors legitimately drive it). **Tightened MLP worked** — was 19/19-fail in Stage 1,
+now BEST for MID. **§11.4 transfer-fee validation (⭐ Phase-11 gold):** 294 paid transfers matched
+by name+age to pre-transfer 2023-24 features → predict → vs actual fee: **median ratio 0.97, Pearson
+r 0.733 (€)/0.677 (log), R²_log 0.43, log-MAE 0.635** (caveat: 2023-24 in-train, but fee is external).
+Over-predicted e.g. Guirassy (€50M pred vs €18M fee). Reports: `stage2_metrics.md`,
+`stage2_feature_importance.md`, `stage2_transfer_validation.md` (+ scatter PNG). `data/processed/
+stage2_{metrics,val_predictions}.parquet` + `models/stage2/` gitignored.
 
 ### Phase 5 — Stage 1 Performance Projection (2026-06-08)
 `src/models/stage1/` (target_specs, data_loader, models, ensemble, persist, evaluate, train) +
