@@ -331,12 +331,12 @@ Multi-output regression on a per-position-tuned vector of stats.
 > available stat universe + xG/xAG (Kaggle 2024-25 top-5, Understat historical top-5).
 > Final selection is locked in Phase 5. See `reports/decisions_log.md` P2-D6.
 
-**Revised realistic targets (Phase-5 to finalize):**
+**FINALIZED targets (Phase 5, 19 total):**
 
-- **GK:** `saves_per_90`, `save_pct`, `clean_sheets_per_90`, `goals_against_per_90` *(psxg unavailable)*
+- **GK:** `saves_per_90`, `save_pct`, `clean_sheets_per_match`, `goals_against_per_90` *(psxg unavailable; clean_sheets is per-match not per-90)*
 - **DEF:** `tackles_won_per_90`, `interceptions_per_90`, `goals_per_90` *(total tackles/blocks/aerials/prog-passes unavailable)*
-- **MID:** `goals_per_90`, `assists_per_90`, `xg_per_90`, `xag_per_90`, `tackles_won_per_90`, `interceptions_per_90` *(key passes/prog-carries/SCA unavailable)*
-- **FWD:** `xg_per_90`, `goals_per_90`, `assists_per_90`, `shots_per_90`, `npxg_per_90` / `understat_xa_per_90` *(SCA/prog-carries unavailable)*
+- **MID:** `goals_per_90`, `assists_per_90`, `xg_per_90`, `understat_xa_per_90`, `tackles_won_per_90`, `interceptions_per_90` *(Phase-5: `xag_per_90`→`understat_xa_per_90` — xag is Kaggle-2024-25-only so it has 0 training history; understat_xa is its empirical equivalent r≈0.93 with historical coverage. key passes/prog-carries/SCA unavailable)*
+- **FWD:** `xg_per_90`, `goals_per_90`, `assists_per_90`, `shots_per_90`, `npxg_per_90`, `understat_xa_per_90` *(SCA/prog-carries unavailable)*
 
 **Original targets (superseded — kept for record):**
 
