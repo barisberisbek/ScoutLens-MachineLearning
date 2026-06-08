@@ -180,6 +180,12 @@ higher-variance (n=325). Reports: `reports/stage1_metrics.md` (best-per-target +
 baseline), `stage1_feature_importance.md` (top-20/target; current-season same-stat dominates =
 autoregressive signal, expected). `data/processed/stage1_val_predictions.parquet` (8,786 best-model
 projections, gitignored). Stage-2 will use ACTUAL stats, NOT these projections (D-02).
+**Model-type diagnostic (Phase-6 decision input):** worse-than-naive by model = **MLP 19/19
+(mean −94%, badly overfit), Ridge 9/19 (mean +1.8%, ~baseline), XGBoost 0/19 (+13.5%), Stacked
+0/19 (+14.6%, best).** Best-per-target is ALWAYS XGBoost or Stacked (never MLP/Ridge) → MLP's
+failure doesn't hurt selected outputs (Stacked's Ridge meta down-weights it), only wastes compute.
+**Phase-6 TODO:** tighten MLP (alpha 0.1–1.0 / smaller nets) OR drop MLP from the Stage-2 base set
+(XGB+Ridge+Stacked suffice). Decide when Phase 6 starts.
 
 ### Phase 4 — Feature Engineering (2026-06-08)
 `data/processed/features.parquet` (**19,356 × 193, +92 features** — final after dropping the
